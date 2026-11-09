@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星城漫游</title>
+<style>
+:root{
+  --brand:#E8572A; --brand2:#F5834A; --brand-soft:#FFF1E8; --brand-line:#F7DCCB;
+  --teal:#0E7C7B; --teal-soft:#EDF7F6; --teal-line:#D3E9E7;
+  --ink:#2B2118; --ink2:#6E5D4F; --ink3:#9C8C7E;
+  --bg:#FBF6F0; --card:#FFFFFF; --line:#EFE4D8;
+  --gold:#B7801F; --danger:#CF4436; --ok:#2E9466;
+  --shadow:0 6px 22px rgba(96,60,32,.07);
+  --shadow2:0 12px 34px rgba(96,60,32,.14);
+  --r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{height:100%;display:flex;flex-direction:column;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC","Source Han Sans SC",system-ui,sans-serif;font-size:14px;line-height:1.65;color:var(--ink);background:var(--bg);overflow-x:hidden}
+.bg-deco{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(900px 430px at 6% -10%,rgba(232,87,42,.11),transparent 70%),radial-gradient(820px 420px at 100% -4%,rgba(14,124,123,.10),transparent 70%),radial-gradient(700px 520px at 50% 115%,rgba(183,128,31,.07),transparent 70%)}
+button,textarea,input{font-family:inherit;font-size:inherit;outline:none}
+button{cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-thumb{background:#E1D3C4;border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:#CDBBA9}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---------- Header ---------- */
+.app-header{position:relative;z-index:2;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:13px 24px;background:linear-gradient(105deg,#C43F1C 0%,#E8572A 46%,#F58A4E 100%);color:#fff;box-shadow:0 6px 22px rgba(178,62,24,.24)}
+.hd-left{display:flex;align-items:center;gap:13px;min-width:0}
+.logo{width:44px;height:44px;flex:0 0 auto;border-radius:13px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center}
+.hd-title h1{font-size:19px;letter-spacing:.5px;font-weight:800;white-space:nowrap}
+.hd-title h1 span{font-weight:500;opacity:.92;font-size:15px}
+.hd-title p{font-size:11.5px;opacity:.86;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hd-right{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.hd-stat{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:10px;padding:5px 11px;font-size:11.5px;line-height:1.3;text-align:center}
+.hd-stat b{display:block;font-size:15px;font-weight:800}
+.switch-wrap{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:22px;padding:6px 12px;font-size:12px;cursor:pointer;user-select:none;white-space:nowrap}
+.switch-wrap input{display:none}
+.switch{width:30px;height:17px;border-radius:20px;background:rgba(255,255,255,.4);position:relative;transition:.2s}
+.switch:after{content:'';position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:.2s}
+.switch-wrap input:checked + .switch{background:#0E7C7B}
+.switch-wrap input:checked + .switch:after{left:15px}
+
+/* ---------- Notice ---------- */
+.notice-bar{position:relative;z-index:2;flex:0 0 auto;display:flex;align-items:flex-start;gap:10px;padding:9px 24px 9px 20px;background:linear-gradient(90deg,#FFF6E8,#FFF9F1 60%,#FFF6EA);border-bottom:1px solid #F3DFC3;color:#7A5527;font-size:12px}
+.notice-icon{flex:0 0 auto;width:19px;height:19px;border-radius:50%;background:var(--brand2);color:#fff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.notice-list{flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px 18px;min-width:0}
+.notice-item{position:relative;padding-left:12px;line-height:1.55}
+.notice-item:before{content:'';position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--brand2)}
+.notice-item b{color:#B44B1C}
+.notice-bar.collapsed .notice-item:nth-child(n+2){display:none}
+.notice-bar.collapsed .notice-list{grid-template-columns:1fr;overflow:hidden}
+.notice-bar.collapsed .notice-item{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.notice-toggle{flex:0 0 auto;color:#B44B1C;font-size:11.5px;border:1px solid #EFCFAE;background:#fff;border-radius:16px;padding:2px 10px;margin-top:1px}
+.notice-toggle:hover{background:#FFF1E4}
+
+/* ---------- Layout ---------- */
+.layout{position:relative;z-index:1;flex:1 1 auto;min-height:0;width:100%;max-width:1820px;margin:0 auto;padding:14px 20px 8px;display:grid;grid-template-columns:296px minmax(340px,1fr) 470px;gap:14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.col-left{display:flex;flex-direction:column;gap:12px;min-height:0;overflow-y:auto;padding-right:2px}
+.col-left .panel{flex:0 0 auto}
+.col-center{display:flex;flex-direction:column;min-height:0}
+.col-right{display:flex;flex-direction:column;min-height:0}
+
+/* ---------- Left panels ---------- */
+.panel-hd{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#FFF9F4,#fff)}
+.panel-hd h2{font-size:13.5px;font-weight:800;letter-spacing:.3px}
+.panel-hd small{margin-left:auto;font-size:10.5px;color:var(--ink3);font-weight:400}
+.ph-icon{width:22px;height:22px;border-radius:7px;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 auto}
+.panel-bd{padding:12px 14px 14px}
+.field-label{font-size:11.5px;font-weight:700;color:var(--ink2);margin:2px 0 8px;display:flex;align-items:center;gap:6px}
+.field-label em{font-style:normal;font-weight:400;color:var(--ink3);font-size:10.5px}
+.field-label:not(:first-child){margin-top:14px}
+.theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.theme-btn{position:relative;display:flex;align-items:center;gap:8px;padding:8px 8px;border:1px solid var(--line);border-radius:10px;background:#fff;text-align:left;transition:.16s;overflow:hidden}
+.theme-btn:hover{border-color:var(--brand2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,87,42,.12)}
+.theme-btn.on{border-color:var(--brand);background:var(--brand-soft);box-shadow:inset 0 0 0 1px var(--brand)}
+.theme-ico{width:26px;height:26px;border-radius:8px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800}
+.theme-txt{min-width:0;flex:1}
+.theme-txt b{display:block;font-size:12px;font-weight:700;white-space:nowrap}
+.theme-txt i{display:block;font-style:normal;font-size:9.5px;color:var(--ink3);white-space:nowrap}
+.theme-rank{position:absolute;top:3px;right:5px;font-size:9px;color:var(--ink3)}
+.theme-btn.on .theme-rank{color:var(--brand);font-weight:700}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;padding:7px 0;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:12px;font-weight:600;color:var(--ink2);transition:.16s}
+.seg button:hover{border-color:var(--brand2)}
+.seg button.on{background:linear-gradient(120deg,var(--brand),var(--brand2));color:#fff;border-color:transparent;box-shadow:0 4px 10px rgba(232,87,42,.22)}
+.seg.audience button{font-size:11px;padding:7px 2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 10px;border:1px solid var(--line);border-radius:20px;background:#fff;font-size:11.5px;color:var(--ink2);transition:.16s}
+.chip:hover{border-color:var(--teal);color:var(--teal)}
+.chip.on{background:var(--teal-soft);border-color:var(--teal);color:var(--teal);font-weight:700}
+.btn-primary{width:100%;margin-top:16px;padding:11px;border-radius:11px;background:linear-gradient(115deg,#D9481F,#F5834A);color:#fff;font-weight:800;font-size:13.5px;letter-spacing:1px;box-shadow:0 6px 16px rgba(217,72,31,.26);transition:.16s}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 9px 20px rgba(217,72,31,.34)}
+.btn-primary:active{transform:translateY(0)}
+.quick-tip{text-align:center;font-size:10.5px;color:var(--ink3);margin-top:7px}
+.guide-list{display:flex;flex-direction:column;gap:7px}
+.guide-item{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border:1px dashed var(--brand-line);border-radius:9px;background:#FFFCF9;font-size:11.5px;color:var(--ink2);text-align:left;transition:.16s;line-height:1.5}
+.guide-item:hover{background:var(--brand-soft);border-style:solid;transform:translateX(2px)}
+.guide-item span{color:var(--brand);font-weight:800;flex:0 0 auto}
+.mini-btn{margin-left:auto;font-size:10.5px;color:var(--ink3);border:1px solid var(--line);border-radius:14px;padding:1px 9px}
+.mini-btn:hover{color:var(--danger);border-color:var(--danger)}
+.hist-meta{padding:7px 14px;font-size:10.5px;color:var(--ink3);border-bottom:1px solid var(--line);background:#FFFDFB}
+.hist-list{max-height:210px;overflow-y:auto;padding:6px 10px 10px}
+.hist-empty{text-align:center;color:var(--ink3);font-size:11px;padding:18px 6px}
+.hist-item{display:flex;gap:8px;padding:7px 8px;border-radius:8px;font-size:11.5px;color:var(--ink2);cursor:pointer;transition:.14s;line-height:1.45}
+.hist-item:hover{background:var(--brand-soft)}
+.hist-no{flex:0 0 auto;width:17px;height:17px;border-radius:5px;background:#F3E9DE;color:var(--ink3);font-size:10px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.hist-item b{display:block;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px}
+.hist-item i{font-style:normal;font-size:10px;color:var(--ink3)}
+
+/* ---------- Chat ---------- */
+.chat-hd{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#FFF9F4,#fff);flex:0 0 auto}
+.chat-avatar{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto;letter-spacing:.5px}
+.chat-hd h2{font-size:13.5px;font-weight:800}
+.chat-hd p{font-size:10.5px;color:var(--ink3)}
+.online-dot{margin-left:auto;font-size:10.5px;color:var(--ok);background:#EAF7F0;border:1px solid #CDEBDD;border-radius:14px;padding:2px 9px;white-space:nowrap}
+.online-dot:before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ok);margin-right:5px;vertical-align:1px}
+.chat-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:18px 18px 8px;display:flex;flex-direction:column;gap:15px;background:radial-gradient(600px 300px at 90% 0%,rgba(255,241,232,.5),transparent 70%)}
+.msg{display:flex;gap:9px;max-width:90%;animation:fadeUp .28s ease both}
+.msg.user{align-self:flex-end;flex-direction:row-reverse}
+.msg-av{width:30px;height:30px;flex:0 0 auto;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800}
+.msg.ai .msg-av{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff}
+.msg.user .msg-av{background:#EDE2D6;color:var(--ink2)}
+.bubble{background:#fff;border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:10px 13px;box-shadow:0 3px 10px rgba(96,60,32,.05);font-size:12.8px;line-height:1.75;white-space:pre-wrap;word-break:break-word;min-width:0}
+.msg.user .bubble{background:linear-gradient(120deg,#E8572A,#F5834A);color:#fff;border-color:transparent;border-radius:14px 4px 14px 14px;box-shadow:0 4px 12px rgba(232,87,42,.2)}
+.bubble b{font-weight:800}
+.bubble .hl{color:var(--brand);font-weight:700}
+.msg.user .bubble .hl{color:#FFE9DA}
+.intent-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;padding-top:8px;border-top:1px dashed var(--line)}
+.itag{font-size:10.5px;padding:2px 8px;border-radius:12px;background:var(--brand-soft);color:#B44B1C;border:1px solid var(--brand-line)}
+.itag.t2{background:var(--teal-soft);color:var(--teal);border-color:var(--teal-line)}
+.msg-actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.msg-act{font-size:10.5px;padding:3px 9px;border:1px solid var(--line);border-radius:13px;color:var(--ink2);background:#fff}
+.msg-act:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+.msg-act.warn:hover{border-color:var(--danger);color:var(--danger);background:#FFF0EE}
+.typing{display:inline-flex;gap:4px;align-items:center;height:16px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--brand2);animation:blink 1.1s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.chat-quick{flex:0 0 auto;display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px 4px;border-top:1px solid var(--line);background:#FFFDFB}
+.qask{font-size:10.8px;padding:4px 9px;border:1px solid var(--brand-line);color:#B44B1C;background:#FFF8F3;border-radius:14px;transition:.15s}
+.qask:hover{background:var(--brand-soft);transform:translateY(-1px)}
+.composer{flex:0 0 auto;padding:8px 14px 13px;border-top:1px solid var(--line);background:#fff}
+.composer-tools{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;gap:8px}
+.tool-btn{font-size:11px;color:var(--brand);border:1px solid var(--brand-line);background:var(--brand-soft);border-radius:14px;padding:3px 10px}
+.tool-btn:hover{background:#FFE7D6}
+.composer-hint{font-size:10px;color:var(--ink3)}
+.input-row{display:flex;gap:9px;align-items:flex-end}
+.input-row textarea{flex:1;resize:none;border:1px solid var(--line);background:#FFFCF9;border-radius:12px;padding:9px 12px;font-size:12.8px;line-height:1.6;color:var(--ink);min-height:60px;max-height:130px;transition:.16s}
+.input-row textarea:focus{border-color:var(--brand2);background:#fff;box-shadow:0 0 0 3px rgba(232,87,42,.08)}
+.send-btn{flex:0 0 auto;height:60px;padding:0 18px;border-radius:12px;background:linear-gradient(120deg,#D9481F,#F5834A);color:#fff;font-weight:800;font-size:13px;box-shadow:0 5px 14px rgba(217,72,31,.24);transition:.16s}
+.send-btn:hover{transform:translateY(-1px)}
+.send-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+
+/* ---------- Plan ---------- */
+.plan-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 16px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#F4FAF9,#fff);flex:0 0 auto}
+.plan-hd h2{font-size:13.5px;font-weight:800}
+.plan-hd p{font-size:10.5px;color:var(--ink3)}
+.badge-soft{font-size:10.5px;color:var(--teal);background:var(--teal-soft);border:1px solid var(--teal-line);border-radius:14px;padding:2px 10px;white-space:nowrap}
+.plan-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:14px}
+.plan-empty{height:100%;min-height:330px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--ink3);gap:6px}
+.plan-empty h3{font-size:14px;color:var(--ink2);font-weight:700;margin-top:8px}
+.plan-empty p{font-size:11.5px;max-width:280px;line-height:1.8}
+.plan-title{background:linear-gradient(115deg,#D9481F,#F5834A);color:#fff;border-radius:13px;padding:13px 15px;margin-bottom:12px;box-shadow:0 6px 16px rgba(217,72,31,.2)}
+.plan-title h3{font-size:16px;font-weight:800;letter-spacing:.5px}
+.plan-title p{font-size:11px;opacity:.9;margin-top:3px}
+.plan-title .pt-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.pt-pill{font-size:10.5px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.32);border-radius:12px;padding:2px 9px}
+.plan-alert{border-radius:10px;padding:9px 11px;font-size:11.5px;line-height:1.65;margin-bottom:10px;border:1px solid}
+.plan-alert.warn{background:#FFF6E6;border-color:#F0D9A8;color:#8A621C}
+.plan-alert.info{background:var(--teal-soft);border-color:var(--teal-line);color:#12615F}
+.plan-alert.err{background:#FFF0EE;border-color:#F3C9C3;color:#A63B2E}
+.day-block{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:11px;background:#fff}
+.day-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;background:linear-gradient(90deg,#FFF3EA,#FFFAF6);border-bottom:1px solid var(--line)}
+.day-hd .dl{display:flex;align-items:center;gap:8px;min-width:0}
+.day-no{background:linear-gradient(120deg,var(--brand),var(--brand2));color:#fff;font-size:11px;font-weight:800;border-radius:8px;padding:3px 9px;white-space:nowrap}
+.day-theme{font-size:11.5px;font-weight:700;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day-hours{font-size:10.5px;color:#B44B1C;background:#fff;border:1px solid var(--brand-line);border-radius:12px;padding:2px 9px;white-space:nowrap;font-weight:700}
+.day-hours.over{color:var(--danger);border-color:#EFC4BE;background:#FFF3F1}
+.spot-card{display:grid;grid-template-columns:56px 1fr;gap:10px;padding:11px 12px;border-bottom:1px dashed var(--line);transition:.15s}
+.spot-card:last-child{border-bottom:none}
+.spot-card:hover{background:#FFFDFB}
+.time-col{text-align:center;border-right:1px solid var(--line);padding-right:8px}
+.time-col b{display:block;font-size:11.5px;color:var(--brand);font-weight:800;letter-spacing:.2px}
+.time-col i{display:block;font-style:normal;font-size:9.5px;color:var(--ink3);margin-top:2px}
+.time-col .seq{display:inline-block;margin-top:6px;width:18px;height:18px;line-height:18px;border-radius:50%;background:#F5EBE0;color:var(--ink2);font-size:10px;font-weight:700}
+.spot-main{min-width:0}
+.spot-name{font-size:13px;font-weight:800;color:var(--brand);cursor:pointer;display:inline-block;line-height:1.4}
+.spot-name:hover{text-decoration:underline}
+.spot-badges{display:inline-flex;gap:4px;flex-wrap:wrap;margin-left:5px;vertical-align:2px}
+.sb{font-size:9.5px;padding:1px 6px;border-radius:9px;white-space:nowrap;font-weight:600}
+.sb.reserve{background:#FFF0DC;color:#A9680E;border:1px solid #F0D9A8}
+.sb.mon{background:#F0EDFA;color:#6B55A8;border:1px solid #DDD5F2}
+.sb.free{background:#EAF7F0;color:#248055;border:1px solid #CFEBDC}
+.sb.night{background:#EDEAF8;color:#5B4E9E;border:1px solid #DCD6F0}
+.sb.far{background:#FDECEA;color:#B54636;border:1px solid #F5D0CA}
+.spot-intro{font-size:11.3px;color:var(--ink2);margin-top:3px;line-height:1.6}
+.spot-meta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:10.8px;color:var(--ink3);margin-top:5px}
+.spot-meta b{color:var(--ink2);font-weight:600}
+.spot-tips{margin-top:6px;background:#FFF8F1;border-left:3px solid var(--brand2);border-radius:0 8px 8px 0;padding:5px 9px;font-size:10.8px;color:#8A5A36;line-height:1.6}
+.spot-tips b{color:#B44B1C}
+.spot-edit{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.spot-edit button{font-size:10px;padding:2px 8px;border:1px solid var(--line);border-radius:10px;color:var(--ink2);background:#fff}
+.spot-edit button:hover{border-color:var(--brand);color:var(--brand)}
+.spot-edit button.del:hover{border-color:var(--danger);color:var(--danger)}
+.spot-card.picked{background:#FFF3EE;box-shadow:inset 0 0 0 1px var(--brand2)}
+.summary{background:linear-gradient(160deg,#F2FAF9,#FBFEFD);border:1px solid var(--teal-line);border-radius:12px;padding:12px 13px;margin-top:4px}
+.summary h4{font-size:12.5px;color:var(--teal);font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.summary h4:before{content:'';width:3px;height:13px;background:var(--teal);border-radius:3px}
+.sum-row{display:flex;gap:8px;font-size:11.3px;color:var(--ink2);line-height:1.7;margin-bottom:5px}
+.sum-row b{flex:0 0 auto;color:var(--ink);font-weight:700}
+.sum-row span{flex:1;min-width:0}
+.res-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px}
+.res-pill{font-size:10.5px;background:#fff;border:1px solid #CDE6E2;color:#12615F;border-radius:10px;padding:1px 8px}
+.plan-ops{display:flex;gap:7px;flex-wrap:wrap;padding:10px 0 4px}
+.op-btn{flex:1;min-width:96px;padding:8px 6px;border-radius:9px;font-size:11.5px;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink2);transition:.15s}
+.op-btn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+.op-btn.primary{background:linear-gradient(115deg,#D9481F,#F5834A);color:#fff;border-color:transparent}
+.op-btn.primary:hover{color:#fff;filter:brightness(1.05)}
+.op-btn.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.edit-banner{background:var(--teal-soft);border:1px dashed var(--teal);color:#12615F;border-radius:9px;padding:8px 10px;font-size:11px;line-height:1.6;margin-bottom:10px;display:none}
+.edit-banner.show{display:block}
+.edit-confirm{display:flex;gap:7px;margin-top:8px}
+.edit-confirm button{font-size:11px;padding:4px 12px;border-radius:8px;border:1px solid var(--teal);color:#fff;background:var(--teal)}
+.edit-confirm button.ghost{background:#fff;color:var(--teal)}
+
+/* ---------- Footer ---------- */
+.foot{position:relative;z-index:1;flex:0 0 auto;padding:6px 24px 10px;font-size:10.8px;color:var(--ink3);max-width:1820px;width:100%;margin:0 auto}
+.foot details{border-top:1px solid var(--line);padding-top:6px}
+.foot summary{cursor:pointer;color:var(--ink2);font-weight:600;list-style:none;display:flex;align-items:center;gap:6px}
+.foot summary:before{content:'▸';color:var(--brand);transition:.2s}
+.foot details[open] summary:before{transform:rotate(90deg)}
+.rule-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 16px;padding:8px 0 4px}
+.rule-grid div{line-height:1.55}
+.rule-grid b{color:var(--brand)}
+
+/* ---------- Modal & toast ---------- */
+.modal-mask{position:fixed;inset:0;z-index:60;background:rgba(38,24,14,.48);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:20px}
+.modal-mask.show{display:flex;animation:fadeUp .2s ease both}
+.modal{width:min(560px,94vw);max-height:86vh;overflow-y:auto;background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(40,20,8,.3)}
+.modal-hd{position:sticky;top:0;background:linear-gradient(115deg,#D9481F,#F5834A);color:#fff;padding:15px 18px;display:flex;align-items:flex-start;gap:10px;z-index:1}
+.modal-hd h3{font-size:17px;font-weight:800}
+.modal-hd p{font-size:11px;opacity:.9;margin-top:2px}
+.modal-close{margin-left:auto;width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.2);color:#fff;font-size:15px;line-height:1;flex:0 0 auto}
+.modal-close:hover{background:rgba(255,255,255,.35)}
+.modal-bd{padding:16px 18px 20px}
+.modal-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.mtag{font-size:10.5px;padding:2px 9px;border-radius:11px;background:var(--brand-soft);color:#B44B1C;border:1px solid var(--brand-line)}
+.mrow{display:grid;grid-template-columns:76px 1fr;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:12.2px;line-height:1.7}
+.mrow:last-of-type{border-bottom:none}
+.mrow b{color:var(--ink3);font-weight:600}
+.mrow span{color:var(--ink2)}
+.modal-note{margin-top:12px;background:#FFF8F1;border:1px solid var(--brand-line);border-radius:9px;padding:9px 11px;font-size:11px;color:#8A5A36;line-height:1.7}
+.modal-src{margin-top:12px;font-size:10.5px;color:var(--ink3);border-top:1px solid var(--line);padding-top:9px}
+.toast{position:fixed;top:78px;left:50%;transform:translate(-50%,-14px);z-index:80;background:#2B2118;color:#fff;padding:9px 18px;border-radius:22px;font-size:12.5px;box-shadow:0 8px 24px rgba(0,0,0,.22);opacity:0;pointer-events:none;transition:.25s;max-width:88vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.err{background:var(--danger)}
+.toast.ok{background:var(--ok)}
+
+@media (max-width:1440px){
+  .layout{grid-template-columns:270px minmax(320px,1fr) 420px;padding:12px 14px 8px;gap:11px}
+  .app-header{padding:12px 16px}.notice-bar{padding-left:16px;padding-right:16px}
+  .theme-txt i{display:none}
+}
+@media (max-width:1120px){
+  .layout{grid-template-columns:270px minmax(0,1fr);grid-template-rows:minmax(520px,1fr) auto}
+  .col-right{grid-column:1 / -1;max-height:none}
+  .plan-body{max-height:560px}
+  .col-left{max-height:560px}
+  .rule-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:760px){
+  body{height:auto}
+  .app-header{flex-wrap:wrap;gap:10px;padding:10px 12px}
+  .hd-left{min-width:0;flex:1 1 auto}
+  .hd-title{min-width:0}
+  .hd-title h1{font-size:15px;white-space:normal;line-height:1.35}
+  .hd-title h1 span{display:block;font-size:11.5px}
+  .hd-title p{font-size:10px;white-space:normal;line-height:1.4}
+  .hd-stat{display:none}
+  .notice-bar{font-size:11px}
+  .notice-list{grid-template-columns:1fr;gap:1px}
+  .layout{display:flex;flex-direction:column;height:auto;padding:10px;gap:10px}
+  .col-left{max-height:none;overflow:visible}
+  .col-center{height:560px}
+  .col-right{height:auto}.plan-body{max-height:none;overflow:visible}
+  .hist-list{max-height:170px}
+  .rule-grid{grid-template-columns:1fr}
+  .foot{padding:8px 12px 16px}
+}
+</style>
+</head>
+<body>
+<div class="bg-deco"></div>
+
+<header class="app-header">
+  <div class="hd-left">
+    <div class="logo">
+      <svg width="27" height="27" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 22c4-1 6-6 9-6s4 3 7 3 5-4 8-5" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M4 27c4-1 6-6 9-6s4 3 7 3 5-4 8-5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".55"/>
+        <circle cx="16" cy="9" r="5" fill="#fff"/>
+        <path d="M16 1.5v3M16 13.5v3M8.5 9h3M20.5 9h3" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="hd-title">
+      <h1>星城漫游</h1>
+      <p>6 大主题 · <span id="statSpotsTxt">49</span> 个景点 · 智能排线</p>
+    </div>
+  </div>
+  <div class="hd-right">
+    <div class="hd-stat"><b id="statSpots">49</b>景点收录</div>
+    <div class="hd-stat"><b>6</b>主题线路</div>
+    <label class="switch-wrap"><input type="checkbox" id="holidayToggle"><span class="switch"></span><span>节假日模式</span></label>
+  </div>
+</header>
+
+<div class="notice-bar" id="noticeBar">
+  <div class="notice-icon">!</div>
+  <div class="notice-list">
+    <span class="notice-item"><b>周一闭馆</b>：湖南博物院、谢子龙影像艺术馆、李自健美术馆、湖南第一师范旧址、雷锋纪念馆、长沙市博物馆、隆平水稻博物馆、湖南湘绣博物馆</span>
+    <span class="notice-item"><b>远郊景点</b>：铜官窑古镇、松雅湖国家湿地公园、杨开慧故居、刘少奇故居、铜官老街，不建议和市区景点安排同一天</span>
+    <span class="notice-item"><b>出行提示</b>：夜市适合晚间出行；湖南博物院、橘子洲旺季预约紧张，记得提前预约；洋湖、松雅湖这类户外公园，夏季务必做好防晒、防蚊虫。</span>
+  </div>
+  <button class="notice-toggle" id="noticeToggle">收起</button>
+</div>
+
+<main class="layout">
+  <aside class="col-left">
+    <section class="panel">
+      <div class="panel-hd"><span class="ph-icon">✦</span><h2>快捷指令面板</h2><small>按兴趣热度排序</small></div>
+      <div class="panel-bd">
+        <div class="field-label">① 选择主题 <em>可多选 / 支持混合</em></div>
+        <div class="theme-grid" id="themeGrid"></div>
+        <div class="field-label">② 游玩天数 <em>仅支持 1–5 天</em></div>
+        <div class="seg" id="daySeg"></div>
+        <div class="field-label">③ 游玩偏好 <em>可多选</em></div>
+        <div class="chips" id="prefChips"></div>
+        <div class="field-label">④ 出行人群 <em>适配推荐</em></div>
+        <div class="seg audience" id="audSeg"></div>
+        <button class="btn-primary" id="quickGen">一键生成行程</button>
+        <div class="quick-tip">也可直接在对话窗口用自然语言描述需求</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-hd"><span class="ph-icon">✧</span><h2>AI 提示引导区</h2></div>
+      <div class="panel-bd guide-list" id="guideList"></div>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="panel-hd"><span class="ph-icon">◷</span><h2>对话历史</h2><button class="mini-btn" id="clearHistory">清空</button></div>
+      <div class="hist-meta" id="histMeta">共 0 轮对话 · 上下文已记忆</div>
+      <div class="hist-list" id="histList"><div class="hist-empty">还没有对话，试试上面的引导问题吧</div></div>
+    </section>
+  </aside>
+
+  <section class="col-center panel chat-panel">
+    <div class="chat-hd">
+      <div class="chat-avatar">AI</div>
+      <div><h2>AI 对话主窗口</h2><p>意图识别 · 多轮上下文记忆 · 动态调整行程</p></div>
+      <span class="online-dot">在线</span>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-quick" id="chatQuick"></div>
+    <div class="composer">
+      <div class="composer-tools">
+        <button class="tool-btn" id="btnRegen">↻ 不满意，重新生成</button>
+        <span class="composer-hint">Enter 发送 · Shift+Enter 换行</span>
+      </div>
+      <div class="input-row">
+        <textarea id="userInput" rows="2" placeholder="例如：帮我规划5天湖湘人文+美食路线，地铁优先"></textarea>
+        <button class="send-btn" id="sendBtn">发送 ➤</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="col-right panel plan-panel">
+    <div class="plan-hd">
+      <div><h2>行程方案展示面板</h2><p>结构化输出 · 严格遵守单日 6 小时上限</p></div>
+      <span class="badge-soft" id="planBadge">待生成</span>
+    </div>
+    <div class="plan-body" id="planBody"></div>
+  </aside>
+</main>
+
+<footer class="foot">
+  <div>数据来源：景点公开信息整理，共 <span id="statSpotsFoot">59</span> 个独立景点。门票、开放时间、预约规则可能变动，出行前请以官方当日公告为准。</div>
+</footer>
+
+<div class="modal-mask" id="modalMask"><div class="modal" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   星城漫游
+   纯前端规则引擎：景点知识库 / 意图识别 / R1-R8 排线 / 多轮记忆
+   ============================================================ */
+
+/* ---------- 主题与偏好定义（按钮顺序按问卷 Q6 兴趣热度排序） ---------- */
+const THEMES = [
+  {id:'food',   name:'美食烟火游', ico:'食', color:'#E8572A', votes:16, weight:6, kw:['美食','烟火','小吃','夜市','吃','探店','逛吃','美食烟火','宵夜','粉店']},
+  {id:'culture',name:'湖湘人文游', ico:'文', color:'#A9622B', votes:11, weight:5, kw:['人文','历史','文化','湖湘','博物','书院','古迹','马王堆','人文游','古镇','寺庙','故居']},
+  {id:'nature', name:'山水洲城游', ico:'山', color:'#0E7C7B', votes:11, weight:4, kw:['山水','自然','洲城','公园','爬山','徒步','湖景','风景','骑行','湿地','山','洲','岳麓山']},
+  {id:'photo',  name:'网红拍照游', ico:'拍', color:'#C2568C', votes:10, weight:3, kw:['网红','拍照','打卡','出片','摄影','影像','拍照游','观景','灯光']},
+  {id:'art',    name:'文艺艺术游', ico:'艺', color:'#7A5AC4', votes:10, weight:2, kw:['文艺','艺术','美术馆','小众','湘绣','展览','陶艺','建筑','文艺游']},
+  {id:'red',    name:'红色研学游', ico:'红', color:'#C8322B', votes:6,  weight:1, kw:['红色','研学','党史','伟人','毛主席','纪念馆','红色游','一师','雷锋','橘子洲']}
+];
+const PREFS = [
+  {id:'free',  name:'免费优先',  kw:['免费','省钱','预算','不花钱','穷游','性价比']},
+  {id:'metro', name:'地铁可达',  kw:['地铁','公共交通','交通方便','交通便利','不开车','地铁优先']},
+  {id:'night', name:'适合夜晚',  kw:['夜景','夜晚','夜游','晚上','夜间','夜生活','看夜景']},
+  {id:'photo', name:'适合拍照',  kw:['拍照','出片','摄影','打卡','好看','拍片']},
+  {id:'easy',  name:'少走路',    kw:['少走路','少爬山','不爬山','轻松','不累','腿脚','带老人','懒人','省力','少爬']}
+];
+const AUDIENCES = [
+  {id:'all',    name:'全部人群'},
+  {id:'student',name:'学生党'},
+  {id:'family', name:'亲子家庭'},
+  {id:'solo',   name:'自由行'}
+];
+const AREAS = [
+  {id:'old',    name:'五一老城核心区', start:'五一广场地铁站', metro:'地铁 1/2 号线五一广场站'},
+  {id:'yuelu',  name:'岳麓山·河西大学城', start:'溁湾镇 / 湖南大学地铁站', metro:'地铁 2/4 号线溁湾镇站'},
+  {id:'river',  name:'湘江中轴·橘子洲', start:'橘子洲地铁站', metro:'地铁 2 号线橘子洲站'},
+  {id:'meixi',  name:'梅溪湖片区', start:'梅溪湖西地铁站', metro:'地铁 2 号线梅溪湖西站'},
+  {id:'yanghu', name:'洋湖片区', start:'洋湖湿地地铁站', metro:'地铁 3 号线洋湖湿地站'},
+  {id:'north',  name:'城北·开福片区', start:'北辰三角洲 / 开福寺地铁站', metro:'地铁 1 号线开福寺站'},
+  {id:'east',   name:'城东·芙蓉片区', start:'万家丽广场 / 隆平水稻博物馆', metro:'地铁 2/5 号线万家丽广场站'},
+  {id:'south',  name:'城南·天心片区', start:'侯家塘 / 南门口地铁站', metro:'地铁 1 号线侯家塘站'},
+  {id:'far',    name:'远郊片区', start:'市区自驾 / 城际公交出发', metro:'建议自驾或包车，单程约 1–1.5 小时'}
+];
+const AREA_MAP = Object.fromEntries(AREAS.map(a=>[a.id,a]));
+
+/* ---------- 景点知识库：57 条问卷条目去重后 49 个独立景点 ----------
+   n名称 t主题 d问卷简介 h游玩时长(小时) a片区 s时段(morning/pm/eve/night/any)
+   loc位置 tk门票 op开放提示 rs预约要求 av避坑提示 q高峰排队提示
+   g标签(free/metro/night/photo/easy/family/student/research)
+   mon周一闭馆 need需预约 far远郊(由片区推导) ---------- */
+const SPOTS = [
+  {id:1, n:'太平老街', t:['food'], d:'傍晚打卡，小吃品类多，避开节假日高峰', h:1.5, a:'old', s:'eve', loc:'天心区·五一广场黄兴路商圈', tk:'免费', op:'街区全天开放，店铺多为 10:00–22:00', rs:'无需预约', av:'避开节假日高峰，傍晚人流最集中；建议 17:00 后到', q:'节假日小吃摊排队明显，网红店建议错峰', g:['free','metro','night','photo','easy']},
+  {id:2, n:'潮宗街', t:['food'], d:'比太平街安静，店铺多下午营业，适合拍照', h:1.5, a:'old', s:'pm', loc:'开福区·潮宗街历史文化街区', tk:'免费', op:'街区全天，多数店铺 14:00 后营业', rs:'无需预约', av:'上午去店铺多未开门，建议下午到傍晚前往', q:'周末拍照点位偶有排队', g:['free','metro','photo','easy']},
+  {id:3, n:'四方坪夜市', t:['food'], d:'17 点后摊位出齐，优先地铁，周末人多', h:1.5, a:'north', s:'night', loc:'开福区·四方坪（地铁 3 号线四方坪站）', tk:'免费入内，消费自理', op:'17:00 后摊位陆续出齐，营业至深夜', rs:'无需预约', av:'优先地铁前往，周边停车困难；周末人多注意随身物品', q:'周末 19:00–21:00 为高峰，热门摊排队久', g:['free','metro','night','student']},
+  {id:4, n:'麓山南路', t:['food'], d:'大学城美食，性价比高，饭点排队久', h:1.5, a:'yuelu', s:'pm', loc:'岳麓区·湖南大学麓山南路', tk:'免费逛街，消费自理', op:'全天，餐饮店多 10:30–22:00', rs:'无需预约', av:'饭点（11:30 / 17:30）排队久，建议错峰；可串联桃子湖、岳麓山', q:'学生下课时段排队最久', g:['free','metro','student','easy']},
+  {id:5, n:'坡子街', t:['food'], d:'紧邻太平街，网红小吃居多，适合顺路逛', h:1, a:'old', s:'eve', loc:'天心区·坡子街（近太平老街）', tk:'免费', op:'全天，店铺多为 10:00–22:00', rs:'无需预约', av:'与太平老街、文和友步行可达，安排同一时段顺路逛最省时', q:'网红小吃店节假日排队明显', g:['free','metro','night','easy']},
+  {id:6, n:'冬瓜山夜市', t:['food'], d:'夜宵热门点，招牌烤肠肉肠经常排队', h:1.5, a:'south', s:'night', loc:'天心区·冬瓜山（近书院路）', tk:'免费入内，消费自理', op:'夜宵时段 18:00 后最热闹', rs:'无需预约', av:'招牌烤肠经常排队，建议先取号再逛周边', q:'21:00 前后为夜宵高峰', g:['free','night','student']},
+  {id:7, n:'扬帆夜市', t:['food'], d:'规模大、营业晚，保管好随身物品', h:2, a:'east', s:'night', loc:'芙蓉区·扬帆小区（万家丽附近）', tk:'免费入内，消费自理', op:'17:30 后出摊，营业至凌晨', rs:'无需预约', av:'规模大人流密，务必保管好随身物品；地铁到万家丽广场后步行', q:'周末 20:00 后最拥挤', g:['free','metro','night']},
+  {id:8, n:'南门口', t:['food'], d:'老牌小吃聚集地，夜景氛围感强', h:1.5, a:'old', s:'night', loc:'天心区·南门口（地铁 1 号线）', tk:'免费', op:'全天，夜间氛围最佳', rs:'无需预约', av:'老牌小吃集中，建议空腹前往；与天心阁、杜甫江阁可串联', q:'周末晚间人流较大', g:['free','metro','night','photo','easy']},
+  {id:9, n:'文和友海信店', t:['food'], d:'免费入内，饭点排队久，拍照不用消费', h:1, a:'old', s:'eve', loc:'天心区·湘江中路海信广场', tk:'免费入内，餐饮消费自理', op:'一般 11:00–凌晨，以现场公告为准', rs:'无需预约（用餐建议提前取号）', av:'拍照不用消费；饭点排队久，建议避开 12:00 / 18:00', q:'饭点取号等位可达 1 小时以上', g:['free','metro','photo','easy']},
+  {id:10,n:'都正街', t:['food'], d:'老城历史街巷，小吃小酒馆丰富，紧邻天心阁，适合下午到晚间闲逛打卡', h:1.5, a:'old', s:'pm', loc:'芙蓉区·都正街（近天心阁）', tk:'免费', op:'全天，店铺多 14:00 后营业', rs:'无需预约', av:'紧邻天心阁、白果园，三点可一口气顺路打卡', q:'节假日傍晚小酒馆一位难求', g:['free','metro','photo','night','easy']},
+  {id:11,n:'化龙池', t:['food'], d:'老长沙清吧古街巷，傍晚之后氛围较好，节假日人流量较大', h:1.5, a:'old', s:'eve', loc:'芙蓉区·化龙池（近黄兴广场）', tk:'免费', op:'全天，清吧傍晚后营业', rs:'无需预约', av:'傍晚之后氛围最佳；节假日人流量较大，注意随身物品', q:'节假日夜间街巷拥挤', g:['free','metro','night','photo','easy']},
+  {id:12,n:'东茅街', t:['food'], d:'本地老长沙街巷，地道粉店与老茶馆集中，游客较少，适合早餐、下午茶', h:1, a:'old', s:'am', loc:'芙蓉区·东茅街（近蔡锷南路）', tk:'免费', op:'粉店多为 06:30–13:00，老茶馆下午营业', rs:'无需预约', av:'游客少，适合早餐或下午茶；本地粉店多数下午歇业', q:'早高峰本地人排队，建议 8:30 前到', g:['free','metro','easy','student']},
+  {id:13,n:'碧湘楚巷', t:['food'], d:'临江新式文商旅街区，餐饮咖啡业态齐全，靠近杜甫江阁，适合傍晚闲逛', h:1.5, a:'old', s:'eve', loc:'天心区·湘江边（近杜甫江阁）', tk:'免费', op:'全天，餐饮咖啡多为 10:00–22:00', rs:'无需预约', av:'靠近杜甫江阁，傍晚闲逛后可直接看湘江夜景', q:'周末傍晚江边拍照点位较抢手', g:['free','metro','photo','night','easy']},
+  {id:14,n:'谢子龙影像艺术馆', t:['photo','art'], d:'周一闭馆，免费预约，出片效果好', h:1.5, a:'yanghu', s:'pm', loc:'岳麓区·洋湖湿地（近李自健美术馆）', tk:'免费（需预约）', op:'周一闭馆，一般 10:00–18:00', rs:'公众号免费预约，携身份证', av:'周一闭馆勿跑空；与李自健美术馆相邻，可同半天连逛', q:'周末热门机位拍照需排队', g:['free','photo','metro'], mon:1, need:1},
+  {id:15,n:'李自健美术馆', t:['photo','art'], d:'和谢子龙相邻，周一闭馆，保持安静', h:1.5, a:'yanghu', s:'pm', loc:'岳麓区·洋湖湿地（谢子龙影像馆旁）', tk:'免费（需预约）', op:'周一闭馆，一般 10:00–18:00', rs:'公众号免费预约', av:'馆内请保持安静、勿用闪光灯；与谢子龙步行 5 分钟', q:'周末入馆需排队核验', g:['free','photo','metro','easy'], mon:1, need:1},
+  {id:16,n:'华谊兄弟电影小镇', t:['photo'], d:'收费，夜景更佳，预留 3 小时游玩', h:3, a:'yanghu', s:'eve', loc:'岳麓区·大王山（近洋湖片区）', tk:'收费（日场/夜场票价不同）', op:'一般 10:00–21:00，夜场以官方公告为准', rs:'建议线上购票', av:'预留 3 小时；夜景灯光更佳，建议傍晚入园一次玩到夜间', q:'节假日夜场入园排队，热门演出提前占位', g:['photo','night','family']},
+  {id:17,n:'长沙世界之窗', t:['photo'], d:'大型主题乐园，游乐项目加夜场演出，建议留足半天，日场 9:00–22:00，周五至周日到 22:30', h:4, a:'north', s:'any', loc:'开福区·三一大道（近海底世界）', tk:'收费（日场 / 夜场票）', op:'日场 9:00–22:00，周五至周日延长至 22:30', rs:'建议提前线上购票', av:'建议留足半天，与长沙海底世界相邻可同日连游', q:'周末及节假日游乐项目排队久，夜场演出提前占位', g:['metro','family','photo','night']},
+  {id:18,n:'长沙海底世界', t:['photo'], d:'极地海洋馆加海豚表演，亲子友好，与世界之窗相邻可同日连游，夏令 8:30–18:30、冬令 9:00–17:30', h:2.5, a:'north', s:'am', loc:'开福区·三一大道（世界之窗旁）', tk:'收费', op:'夏令 8:30–18:30 / 冬令 9:00–17:30', rs:'建议提前线上购票', av:'海豚表演按场次，入园先查时刻表；与世界之窗步行可达', q:'节假日表演厅提前 30 分钟满座', g:['metro','family','easy']},
+  {id:19,n:'中国结步行桥', t:['photo','nature'], d:'傍晚看日落，夜晚灯光好看，风大', h:1, a:'meixi', s:'eve', loc:'岳麓区·梅溪湖（地铁 2 号线）', tk:'免费', op:'全天开放，夜间亮灯', rs:'无需预约', av:'桥面风大，早晚备薄外套；傍晚日落 + 夜间灯光两种景致', q:'周末傍晚桥上拍照人多', g:['free','metro','photo','night','easy']},
+  {id:20,n:'城市岛双螺旋观景台', t:['photo'], d:'免费，螺旋台阶，注意防滑', h:1, a:'meixi', s:'eve', loc:'岳麓区·梅溪湖城市岛', tk:'免费', op:'全天开放', rs:'无需预约', av:'螺旋台阶较多，雨天注意防滑；登顶可俯瞰梅溪湖', q:'节假日登台单向通行需排队', g:['free','metro','photo']},
+  {id:21,n:'梅溪湖节庆岛白沙滩', t:['photo'], d:'晴天做好防晒，请勿乱扔垃圾', h:1.5, a:'meixi', s:'pm', loc:'岳麓区·梅溪湖节庆岛', tk:'免费', op:'全天开放', rs:'无需预约', av:'晴天紫外线强，做好防晒；请随身带走垃圾', q:'周末亲子客流集中', g:['free','metro','photo','family']},
+  {id:22,n:'洋湖国家湿地公园', t:['photo','nature','art'], d:'湿地花海景观，傍晚光线佳，可串联洋湖水街一同游览；湿地生态适合文艺取景', h:2, a:'yanghu', s:'pm', loc:'岳麓区·洋湖湿地（地铁 3 号线）', tk:'免费', op:'全天开放，建议白天至傍晚', rs:'无需预约', av:'面积较大，夏季做好防晒、防蚊虫；傍晚光线最佳，可串联洋湖水街', q:'周末傍晚步道骑行与散步人多', g:['free','metro','photo','family']},
+  {id:23,n:'松雅湖国家湿地公园', t:['photo','nature'], d:'金沙银滩、水杉林，日落景观出众，属于远郊点位，适合骑行', h:2.5, a:'far', s:'pm', loc:'长沙县·松雅湖（远郊）', tk:'免费', op:'全天开放', rs:'无需预约', av:'远郊点位，建议单独安排半日并自驾/骑行；夏季做好防晒防蚊虫', q:'周末傍晚日落时段停车紧张', g:['free','photo','family']},
+  {id:24,n:'桃子湖', t:['photo','nature'], d:'背靠湖南大学，湖景与梧桐景观，人少安静，可串联麓山南路', h:1, a:'yuelu', s:'pm', loc:'岳麓区·湖南大学旁（近麓山南路）', tk:'免费', op:'全天开放', rs:'无需预约', av:'人少安静，可与麓山南路、岳麓山串联，适合放空', q:'基本无排队', g:['free','metro','photo','easy']},
+  {id:25,n:'洋湖水街', t:['photo','art'], d:'江南水系仿古街区，闲逛免费，夜景灯光效果好，建议傍晚前往', h:1.5, a:'yanghu', s:'eve', loc:'岳麓区·洋湖湿地旁', tk:'免费', op:'全天开放，夜景灯光一般 18:30 后开启', rs:'无需预约', av:'建议傍晚前往，白天看水系、入夜看灯光；与洋湖湿地顺路', q:'周末夜间主街人流较大', g:['free','metro','photo','night','easy']},
+  {id:26,n:'湖南博物院', t:['culture'], d:'周一闭馆，提前 5 天公众号预约，带身份证', h:2.5, a:'north', s:'am', loc:'开福区·东风路 50 号', tk:'免费（常设展）', op:'周一闭馆，一般 9:00–17:00（16:00 停止入馆）', rs:'提前 5 天公众号预约，务必携带身份证', av:'周一闭馆勿跑空；旺季预约极紧张，建议行程第一天就抢票', q:'旺季放票即秒空，马王堆展厅排队明显', g:['free','metro','family','research'], mon:1, need:1},
+  {id:27,n:'岳麓书院', t:['culture'], d:'位于岳麓山内，单独购票，适合搭配岳麓山同天游览', h:1.5, a:'yuelu', s:'am', loc:'岳麓区·岳麓山南门内', tk:'单独购票（学生半价）', op:'一般 7:30–18:00，季节调整以公告为准', rs:'可现场或线上购票', av:'位于岳麓山内，建议与岳麓山、爱晚亭安排同一天', q:'节假日入口检票排队', g:['metro','student','research','easy']},
+  {id:28,n:'天心阁', t:['culture'], d:'学生票半价，体量不大，半小时可逛完', h:0.5, a:'old', s:'pm', loc:'天心区·天心路（近都正街）', tk:'收费，学生票半价', op:'一般 8:00–18:00', rs:'无需预约', av:'体量不大，半小时可逛完；紧邻都正街、白果园，顺路打卡即可', q:'基本无排队', g:['metro','student','easy']},
+  {id:29,n:'贾谊故居', t:['culture'], d:'点位较小，顺路打卡即可', h:0.5, a:'old', s:'pm', loc:'天心区·太平街内', tk:'免费（登记参观）', op:'一般 9:00–17:00，周一可能闭馆', rs:'现场登记，建议携身份证', av:'点位较小，逛太平老街时顺路打卡即可，无需单独安排', q:'基本无排队', g:['free','metro','easy','research']},
+  {id:30,n:'杜甫江阁', t:['culture'], d:'湘江边，适合看夜景，登阁收费，江边散步免费', h:1, a:'old', s:'eve', loc:'天心区·湘江中路（近碧湘楚巷）', tk:'登阁收费，江边散步免费', op:'一般 9:00–21:30，夜间亮灯', rs:'无需预约', av:'看夜景不一定要登阁，江边散步免费；可与碧湘楚巷、南门口串联', q:'节假日亮灯时段江边人多', g:['free','metro','photo','night','easy']},
+  {id:31,n:'开福寺', t:['culture'], d:'门票 10 元，礼佛场所，保持安静', h:1, a:'north', s:'am', loc:'开福区·开福寺路（地铁 1 号线）', tk:'门票 10 元', op:'一般 8:00–17:00', rs:'无需预约', av:'礼佛场所请保持安静、着装得体；可与湖南博物院串同半天', q:'初一十五及节假日香客较多', g:['metro','easy']},
+  {id:32,n:'铜官窑古镇', t:['culture'], d:'离市区远、门票偏高，建议单独安排一日游', h:4, a:'far', s:'any', loc:'望城区·铜官窑（远郊）', tk:'收费，门票偏高', op:'一般 9:00–21:00，夜场演出以公告为准', rs:'建议提前线上购票', av:'离市区远、门票偏高，建议单独安排一日游；可与铜官老街同日', q:'节假日夜场演出与入园排队明显', g:['family','photo','night']},
+  {id:33,n:'滨江文化园（长沙市博物馆）', t:['culture','art'], d:'周一闭馆，免费预约，三馆一厅园区，地铁可达，可一并参观规划馆；馆藏长沙本地历史文物，建筑设计大气', h:1.5, a:'north', s:'am', loc:'开福区·北辰三角洲（三馆一厅）', tk:'免费（需预约）', op:'周一闭馆，一般 9:00–17:00', rs:'公众号免费预约', av:'周一闭馆勿跑空；三馆一厅园区，可一并参观规划展示馆', q:'周末入馆核验需排队', g:['free','metro','easy','research','photo'], mon:1, need:1},
+  {id:34,n:'白果园历史街区（程潜公馆）', t:['culture'], d:'民国老巷，程潜公馆可免费登记参观，点位不大，紧邻都正街，适合顺路打卡', h:0.5, a:'old', s:'pm', loc:'芙蓉区·白果园（近都正街）', tk:'免费', op:'街区全天，公馆一般 9:00–17:00', rs:'程潜公馆免费登记参观', av:'点位不大，紧邻都正街，顺路打卡 30 分钟即可', q:'基本无排队', g:['free','metro','photo','easy'], need:1},
+  {id:35,n:'铜官老街', t:['culture','art'], d:'铜官窑古镇旁老街，街区免费，主打陶艺手作体验，远郊点位，建议单独安排一日游', h:1.5, a:'far', s:'pm', loc:'望城区·铜官街道（远郊）', tk:'街区免费，陶艺体验另收费', op:'全天，店铺多为 9:00–18:00', rs:'陶艺体验建议提前预约', av:'远郊点位，与铜官窑古镇同日安排，不建议与市区景点混排', q:'节假日陶艺体验需等位', g:['free','photo','family']},
+  {id:36,n:'橘子洲', t:['red'], d:'免费预约，洲体很长，建议坐观光车', h:2, a:'river', s:'am', loc:'岳麓区·湘江中心（地铁 2 号线橘子洲站）', tk:'免费，观光车另收费', op:'全天开放，观光车按运营时间', rs:'公众号免费预约，旺季预约紧张', av:'洲体很长，建议坐观光车；旺季预约紧张，务必提前预约', q:'节假日观光车与地铁站排队久，建议早到', g:['free','metro','family','research','photo'], need:1},
+  {id:37,n:'湖南第一师范旧址', t:['red'], d:'周一闭馆，需预约，《恰同学少年》取景地', h:1.5, a:'old', s:'am', loc:'天心区·书院路（近南门口）', tk:'免费（需预约）', op:'周一闭馆，一般 9:00–17:00', rs:'公众号预约，携身份证', av:'周一闭馆勿跑空；与新民学会旧址距离近，适合搭配参观', q:'研学团队集中时段展厅较拥挤', g:['free','metro','research','student','easy'], mon:1, need:1},
+  {id:38,n:'新民学会旧址', t:['red'], d:'空间不大，适合搭配一师一起参观', h:0.5, a:'old', s:'am', loc:'岳麓区·新民路（近一师旧址）', tk:'免费', op:'一般 9:00–17:00', rs:'现场登记', av:'空间不大，与湖南第一师范旧址搭配参观，顺路 30 分钟', q:'基本无排队', g:['free','metro','research','easy']},
+  {id:39,n:'雷锋纪念馆', t:['red'], d:'周一闭馆，提前预约，安静参观展厅', h:1.5, a:'far', s:'am', loc:'望城区·雷锋镇（远郊）', tk:'免费（需预约）', op:'周一闭馆，一般 9:00–17:00', rs:'提前预约，携身份证', av:'位于望城，路程较远，建议单独安排半日；展厅请保持安静', q:'研学团队到访时段较集中', g:['free','research'], mon:1, need:1},
+  {id:40,n:'杨开慧故居', t:['red'], d:'长沙县，距离市区较远，适合远郊研学', h:1.5, a:'far', s:'am', loc:'长沙县·开慧镇（远郊）', tk:'免费', op:'一般 9:00–17:00', rs:'建议提前电话确认', av:'距离市区较远，适合远郊研学单独安排，预留往返通勤', q:'基本无排队', g:['free','research']},
+  {id:41,n:'刘少奇故居', t:['red'], d:'宁乡，路程远，建议单独安排一整天', h:3, a:'far', s:'any', loc:'宁乡市·花明楼（远郊）', tk:'免费', op:'一般 9:00–17:00', rs:'建议提前确认开放安排', av:'路程远，建议单独安排一整天，不与市区景点混排', q:'节假日研学团队集中', g:['free','research','family']},
+  {id:42,n:'隆平水稻博物馆', t:['red','art'], d:'周一闭馆，免费预约，科普杂交水稻文化，适合家庭与研学，地铁直达；建筑造型独特', h:1.5, a:'east', s:'am', loc:'芙蓉区·隆平新区（地铁 6 号线直达）', tk:'免费（需预约）', op:'周一闭馆，一般 9:00–17:00', rs:'公众号免费预约', av:'周一闭馆勿跑空；地铁直达，适合家庭与研学', q:'周末亲子客流集中', g:['free','metro','family','research','photo','easy'], mon:1, need:1},
+  {id:43,n:'岳麓山', t:['nature','culture'], d:'免费预约，南门近岳麓书院，索道滑道周末排队久', h:2.5, a:'yuelu', s:'am', loc:'岳麓区·岳麓山（南门 / 东门）', tk:'免费（需预约），索道滑道另收费', op:'全天开放，索道按运营时间', rs:'公众号免费预约', av:'南门近岳麓书院，建议南门进；索道滑道周末排队久，少走路偏好可只逛南门线', q:'周末索道 / 滑道排队可达 1 小时', g:['free','metro','student','research','photo'], need:1},
+  {id:44,n:'后湖国际艺术区', t:['nature','art'], d:'小众文艺，傍晚光线适合拍照，人少', h:1.5, a:'yuelu', s:'eve', loc:'岳麓区·后湖（近湖南大学）', tk:'免费', op:'全天开放', rs:'无需预约', av:'人少安静，傍晚光线最适合拍照；可与桃子湖、麓山南路串联', q:'基本无排队', g:['free','metro','photo','easy']},
+  {id:45,n:'梅溪湖公园', t:['nature'], d:'环湖步道长，可骑行，串联周边景点', h:2, a:'meixi', s:'pm', loc:'岳麓区·梅溪湖（地铁 2 号线）', tk:'免费', op:'全天开放', rs:'无需预约', av:'环湖步道长，建议骑行；可串联中国结步行桥、城市岛、艺术中心', q:'周末骑行道人多', g:['free','metro','photo','family']},
+  {id:46,n:'桃花岭公园', t:['nature'], d:'山林徒步，穿舒适鞋子，夏季防蚊虫', h:2, a:'meixi', s:'am', loc:'岳麓区·梅溪湖桃花岭', tk:'免费', op:'全天开放', rs:'无需预约', av:'山林徒步请穿舒适鞋子，夏季做好防蚊虫；不适合少走路偏好', q:'基本无排队', g:['free','photo']},
+  {id:50,n:'月湖公园', t:['nature'], d:'免费城市湖景园林，环湖步道，人少清静，适合散步放空', h:1.5, a:'north', s:'pm', loc:'开福区·月湖（近湖南广电）', tk:'免费', op:'全天开放', rs:'无需预约', av:'人少清静，适合散步放空；可与城北片区景点串联', q:'基本无排队', g:['free','metro','easy','photo']},
+  {id:51,n:'梅溪湖国际文化艺术中心', t:['art'], d:'观演购票，建筑外观免费打卡，傍晚好看', h:1, a:'meixi', s:'eve', loc:'岳麓区·梅溪湖（地铁 2 号线）', tk:'外观免费，观演需购票', op:'外观全天可拍，演出按场次', rs:'观演需提前购票', av:'建筑外观免费打卡即可，傍晚光线最好；与梅溪湖公园、中国结桥顺路', q:'热门机位傍晚偶有排队', g:['free','metro','photo','night','easy']},
+  {id:57,n:'湖南湘绣博物馆', t:['art'], d:'展示湘绣非遗工艺，场馆不大，周一闭馆，适合顺路打卡', h:1, a:'east', s:'pm', loc:'芙蓉区·车站路（近火车站）', tk:'免费（建议预约确认）', op:'周一闭馆，一般 9:00–17:00', rs:'建议提前电话 / 公众号确认', av:'场馆不大，周一闭馆勿跑空，适合与城东片区顺路打卡', q:'基本无排队', g:['free','metro','easy','research'], mon:1},
+  /* —— 以下 10 个为用户提供的 54 条景点对照表补充点位 —— */
+  {id:58,n:'湘江海洋王国（大王山）', t:['photo'], d:'大型室内海洋馆，北极熊、企鹅、美人鱼表演', h:4, a:'yanghu', s:'am', loc:'岳麓区·大王山（地铁 2 号线大王山站）', tk:'门票 198 元', op:'9:30–18:00', rs:'建议提前线上购票', av:'预留半天，表演按场次，入园先查时刻表；可与洋湖片区同日', q:'节假日海洋剧场提前满座', g:['family','photo'], src:'用户提供的 54 条景点对照表（补充点位，AI 整理，出行前请核实）'},
+  {id:59,n:'梅溪海洋公园', t:['photo'], d:'室内海洋馆，海底生物观赏与隧道打卡，雨天友好', h:2.5, a:'meixi', s:'am', loc:'岳麓区·梅溪湖（地铁 2 号线沿线）', tk:'门票 118 元', op:'10:00–21:00', rs:'建议提前线上购票', av:'室内场馆雨天可玩，可与梅溪湖片区景点同日串联', q:'周末亲子客流集中', g:['family','photo','metro'], src:'用户提供的 54 条景点对照表（补充点位，AI 整理，出行前请核实）'},
+  {id:60,n:'长沙生态动物园', t:['photo'], d:'含步行区与车行区，大熊猫、猛兽区，亲子科普', h:4, a:'south', s:'am', loc:'天心区·暮云（地铁 1 号线转公交 / 接驳）', tk:'门票 45 元', op:'8:30–17:00', rs:'建议提前线上购票', av:'车行区建议早到，预留半天；距市中心较远，不建议再排市区远点位', q:'节假日车行区排队 30 分钟以上', g:['family','photo'], src:'用户提供的 54 条景点对照表（补充点位，AI 整理，出行前请核实）'},
+  {id:61,n:'梅溪欢乐谷', t:['photo'], d:'室内外结合的游乐项目，过山车、无动力设施，雨天可玩', h:3, a:'meixi', s:'pm', loc:'岳麓区·梅溪新天地（地铁 2 号线沿线）', tk:'套票 120 元', op:'10:00–21:30', rs:'建议提前线上购票', av:'室内外结合雨天可玩，与梅溪湖片区顺路；热门项目先玩', q:'周末热门项目排队明显', g:['family','photo','metro'], src:'用户提供的 54 条景点对照表（补充点位，AI 整理，出行前请核实）'},
+  {id:62,n:'西湖公园（咸嘉湖）', t:['nature'], d:'环湖绿道，人少安静，适合散步骑行', h:2, a:'meixi', s:'pm', loc:'岳麓区·咸嘉湖（地铁 2 号线西湖公园站直达）', tk:'免费', op:'全天开放', rs:'无需预约', av:'环湖步道平缓适合少走路偏好，可与梅溪湖公园串联', q:'基本无排队', g:['free','metro','easy','photo'], src:'用户提供的 54 条景点对照表（补充点位，AI 整理，出行前请核实）'},
+  {id:63,n:'南郊公园', t:['nature'], d:'城市山林公园，森林氧吧，登山步道', h:2, a:'south', s:'pm', loc:'天心区·湘江南路（近豹子岭）', tk:'免费', op:'全天开放', rs:'无需预约', av:'山林步道请穿舒适鞋，夏季防蚊虫；不适合少走路偏好', q:'基本无排队', g:['free'], src:'用户提供的 54 条景点对照表（补充点位，AI 整理，出行前请核实）'},
+  {id:64,n:'黑麋峰森林公园', t:['nature'], d:'长沙近郊高山，霞岫云海，适合一日徒步', h:4, a:'far', s:'am', loc:'望城区·桥驿镇（远郊，无直达地铁，建议自驾）', tk:'门票 27 元', op:'8:00–17:30', rs:'无需预约', av:'远郊点位单独安排半日，山路徒步穿舒适鞋，勿与市区景点混排', q:'节假日山道停车紧张', g:['photo'], src:'用户提供的 54 条景点对照表（补充点位，AI 整理，出行前请核实）'},
+  {id:65,n:'大围山国家森林公园', t:['nature'], d:'浏阳高山，杜鹃花海、漂流、避暑胜地，适合两日游', h:5, a:'far', s:'am', loc:'浏阳市·大围山镇（远郊，建议自驾）', tk:'门票 90 元', op:'7:30–17:30', rs:'无需预约', av:'距市区约 2 小时车程，建议单独安排一日或两日游，勿与市区景点混排', q:'杜鹃花季（4–5 月）客流大', g:['photo'], src:'用户提供的 54 条景点对照表（补充点位，AI 整理，出行前请核实）'},
+  {id:66,n:'橘子洲沙滩公园', t:['nature','photo'], d:'橘子洲西侧沙滩，玩水拍照，与橘子洲景区连通游', h:2, a:'river', s:'pm', loc:'岳麓区·橘子洲西侧（地铁 2 号线橘子洲站）', tk:'免费', op:'全天开放', rs:'无需预约', av:'夏季玩水注意安全，与橘子洲头可一并游览', q:'夏季周末沙滩区域人多', g:['free','metro','photo','family'], src:'用户提供的 54 条景点对照表（补充点位，AI 整理，出行前请核实）'},
+  {id:67,n:'沙湾公园', t:['nature'], d:'城市山体公园，草坪、羽毛球馆，适合散步放空', h:1.5, a:'east', s:'pm', loc:'雨花区·沙湾公园（地铁 4/5 号线沙湾公园站）', tk:'免费', op:'全天开放', rs:'无需预约', av:'城市绿肺，人少清静，可与城东片区景点串联', q:'基本无排队', g:['free','metro','easy','photo'], src:'用户提供的 54 条景点对照表（补充点位，AI 整理，出行前请核实）'}
+];
+const SPOT_MAP = Object.fromEntries(SPOTS.map(s=>[s.n,s]));
+
+const GUIDES = [
+  '帮我规划5天湖湘人文+美食路线，地铁优先',
+  '家庭出行，4天行程，少爬山',
+  '3天网红拍照游，免费优先，适合拍照',
+  '把橘子洲放到第三天，删掉铜官窑古镇',
+  '红色研学2天，学生党，尽量少走路'
+];
+const QUICK_ASKS = ['5天人文+美食，地铁优先','家庭4天少爬山','换成2天网红拍照','橘子洲要预约吗','删掉铜官窑古镇'];
+const CLOSED_MONDAY = ['湖南博物院','谢子龙影像艺术馆','李自健美术馆','湖南第一师范旧址','雷锋纪念馆','长沙市博物馆','隆平水稻博物馆','湖南湘绣博物馆'];
+const FAR_LIST = ['铜官窑古镇','松雅湖国家湿地公园','杨开慧故居','刘少奇故居','铜官老街'];
+
+/* 修正主题关键词：剔除易与景点名 / 偏好词冲突的单字 */
+THEMES.find(t=>t.id==='nature').kw = ['山水','自然','洲城','公园','徒步','湖景','风景','骑行','湿地','岳麓山','山林'];
+THEMES.find(t=>t.id==='red').kw    = ['红色','研学','党史','伟人','毛主席','纪念馆','一师','雷锋','党史馆'];
+const CN_NUM = {'一':1,'二':2,'两':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9,'十':10,'半':0.5};
+const SLOT_ORDER = {am:0,any:1,pm:2,eve:3,night:4};
+const ANCHOR = {am:540,any:570,pm:810,eve:1020,night:1170};
+const ALIAS = {
+  '省博':'湖南博物院','省博物馆':'湖南博物院','一师':'湖南第一师范旧址','第一师范':'湖南第一师范旧址',
+  '超级文和友':'文和友海信店','文和友':'文和友海信店','市博':'滨江文化园（长沙市博物馆）','长沙市博物馆':'滨江文化园（长沙市博物馆）','滨江文化园':'滨江文化园（长沙市博物馆）',
+  '海底世界':'长沙海底世界','海洋公园':'长沙海底世界','世界之窗':'长沙世界之窗','电影小镇':'华谊兄弟电影小镇',
+  '谢子龙':'谢子龙影像艺术馆','李自健':'李自健美术馆','洋湖湿地':'洋湖国家湿地公园','洋湖':'洋湖国家湿地公园',
+  '松雅湖':'松雅湖国家湿地公园','白果园':'白果园历史街区（程潜公馆）','程潜公馆':'白果园历史街区（程潜公馆）',
+  '橘子洲头':'橘子洲','铜官窑':'铜官窑古镇','铜官':'铜官老街','隆平':'隆平水稻博物馆','湘绣':'湖南湘绣博物馆',
+  '梅溪湖艺术中心':'梅溪湖国际文化艺术中心','艺术中心':'梅溪湖国际文化艺术中心','中国结':'中国结步行桥',
+  '双螺旋':'城市岛双螺旋观景台','太平街':'太平老街','四方坪':'四方坪夜市','扬帆':'扬帆夜市',
+  '冬瓜山':'冬瓜山夜市','麓山南路':'麓山南路','后湖':'后湖国际艺术区','月湖':'月湖公园',
+  '白沙滩':'梅溪湖节庆岛白沙滩','水街':'洋湖水街','步行桥':'中国结步行桥','新民学会':'新民学会旧址',
+  '刘少奇':'刘少奇故居','杨开慧':'杨开慧故居','雷锋':'雷锋纪念馆','贾谊':'贾谊故居','开福寺':'开福寺',
+  '杜甫江阁':'杜甫江阁','天心阁':'天心阁','岳麓书院':'岳麓书院','岳麓山':'岳麓山','都正街':'都正街',
+  '化龙池':'化龙池','东茅街':'东茅街','碧湘楚巷':'碧湘楚巷','潮宗街':'潮宗街','坡子街':'坡子街',
+  '南门口':'南门口','桃子湖':'桃子湖','梅溪湖公园':'梅溪湖公园','桃花岭':'桃花岭公园',
+  '城市岛':'城市岛双螺旋观景台','月湖公园':'月湖公园','铜官老街':'铜官老街','铜官窑古镇':'铜官窑古镇',
+  '海洋王国':'湘江海洋王国（大王山）','大王山':'湘江海洋王国（大王山）','梅溪海洋':'梅溪海洋公园','动物园':'长沙生态动物园','生态动物园':'长沙生态动物园',
+  '欢乐谷':'梅溪欢乐谷','咸嘉湖':'西湖公园（咸嘉湖）','西湖公园':'西湖公园（咸嘉湖）','黑麋峰':'黑麋峰森林公园',
+  '大围山':'大围山国家森林公园','橘子洲沙滩':'橘子洲沙滩公园','沙滩公园':'橘子洲沙滩公园','沙湾':'沙湾公园'
+};
+const MATCH_KEYS = Object.keys(ALIAS).concat(SPOTS.map(s=>s.n)).sort((a,b)=>b.length-a.length);
+
+/* ---------- 全局状态（多轮上下文记忆） ---------- */
+const S = {
+  days:3, themes:['food'], prefs:[], audience:'all', holiday:false,
+  removed:[], added:[], pinned:[], seed:0,
+  plan:null, history:[], editMode:null, removeSel:[], lastPlanMsg:null
+};
+function save(){
+  try{ localStorage.setItem('cs_agent_state', JSON.stringify(S)); }catch(e){}
+}
+function load(){
+  try{
+    const raw = localStorage.getItem('cs_agent_state');
+    if(!raw) return false;
+    const o = JSON.parse(raw);
+    if(!o || typeof o!=='object') return false;
+    Object.assign(S, o);
+    S.removeSel = []; S.editMode = null;
+    return true;
+  }catch(e){ return false; }
+}
+
+/* ---------- 工具 ---------- */
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const spot = n => SPOT_MAP[n] || null;
+const themeName = id => (THEMES.find(t=>t.id===id)||{}).name || id;
+const themeLabel = () => (S.themes.length?S.themes:['food']).map(themeName).join(' + ');
+const prefNames = () => S.prefs.map(p=>(PREFS.find(x=>x.id===p)||{}).name||p).join('、') || '无特殊偏好';
+const audName = () => (AUDIENCES.find(a=>a.id===S.audience)||{}).name || '全部人群';
+const fmt = m => { m = Math.round(m); const h = Math.floor(m/60)%24, mm = m%60; return String(h).padStart(2,'0')+':'+String(mm).padStart(2,'0'); };
+function toast(msg, kind){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast show' + (kind?' '+kind:'');
+  clearTimeout(toast._t); toast._t = setTimeout(()=>el.className='toast', 2800);
+}
+function findMentioned(text){
+  const found = [], taken = [];
+  MATCH_KEYS.forEach(k=>{
+    const idx = text.indexOf(k);
+    if(idx<0) return;
+    if(taken.some(t=> idx>=t[0] && idx<t[1])) return;
+    const name = ALIAS[k] || k;
+    const s = spot(name);
+    if(!s || found.some(f=>f.s.n===name)) return;
+    taken.push([idx, idx+k.length]);
+    found.push({s, idx, key:k});
+  });
+  return found.sort((a,b)=>a.idx-b.idx);
+}
+function extractDays(text){
+  /* 先剔除「第X天」这类移动指令里的序数，避免「放到第三天」被误读成「3 天行程」 */
+  const dayText = text.replace(/第\s*[一二三四五两1-5]\s*天/g,' ');
+  let m = dayText.match(/([0-9]+|[一二两三四五六七八九十半])\s*天/);
+  if(!m) m = dayText.match(/([0-9]+|[一二两三四五六七八九十半])\s*日(?:游)?/);
+  if(m){ const raw=m[1]; return {found:true, n:/^[0-9]+$/.test(raw)?parseInt(raw):CN_NUM[raw], raw:m[0]}; }
+  if(/半日|半天|一日游|玩一天|逛一天/.test(dayText)) return {found:true, n:1, raw:'一日'};
+  return {found:false, n:null, raw:''};
+}
+
+/* ---------- 意图识别 ---------- */
+function parseIntent(raw){
+  const text = raw.trim();
+  const r = {type:'generate', days:null, themes:[], prefs:[], audience:null, holiday:false,
+             ops:[], mentioned:[], label:'', reason:'', regen:false, query:null};
+  const d = extractDays(text);
+  if(d.found){ if(!Number.isFinite(d.n) || d.n<1 || d.n>5){
+      r.type='invalid'; r.reason='days'; return r;
+    } r.days = d.n; }
+
+  /* 节假日 / 周末 / 避峰 */
+  if(/节假日|国庆|五一|小长假|长假|假期|周末|人多|高峰|错峰/.test(text)) r.holiday = true;
+
+  /* 重生成指令 */
+  if(/重新生成|重新规划|换一条|换一批|不满意|再来一版|重新排|换个方案|重排/.test(text)) r.regen = true;
+
+  /* 先剥离已识别的景点名，避免「铜官窑古镇」里的「古镇」被误判成人文主题、「岳麓山」被误判成山水主题 */
+  const mentions = findMentioned(text);
+  r.mentioned = mentions.map(m=>m.s);
+  const keys = [...new Set(mentions.map(m=>m.key))].sort((a,b)=>b.length-a.length);
+  const stripRe = keys.length? new RegExp(keys.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g') : null;
+  const cleanText = stripRe? text.replace(stripRe,' ') : text;
+
+  /* 主题（基于去景点化文本） */
+  THEMES.forEach(t=>{ if(t.kw.some(k=>cleanText.includes(k)) || cleanText.includes(t.name)) r.themes.push(t.id); });
+  if(/全部主题|所有主题|都想去|随便|不限主题/.test(cleanText)) r.themes = THEMES.map(t=>t.id);
+  /* 偏好与人群 */
+  PREFS.forEach(p=>{ if(p.kw.some(k=>cleanText.includes(k)) || cleanText.includes(p.name)) r.prefs.push(p.id); });
+  if(/家庭|亲子|带娃|带孩子|带小孩|老人/.test(cleanText)){ r.audience='family'; if(!r.prefs.includes('easy')) r.prefs.push('easy'); }
+  else if(/学生|学生党|穷游|预算有限/.test(cleanText)) r.audience='student';
+  else if(/自由行|成年人|一个人|独自/.test(cleanText)) r.audience='solo';
+
+  /* 修改指令：先切出「把X放到第N天」片段（用原文） */
+  let rest = text;
+  const moveRe = /把?\s*([^，,。；;]{2,24}?)\s*(?:放|挪|调|改|换|移|排)\s*(?:到|至|在|去)?\s*第?\s*([一二三四五1-5])\s*天/g;
+  let mm;
+  while((mm = moveRe.exec(text))!==null){
+    const frag = mm[1];
+    const day = CN_NUM[mm[2]] || parseInt(mm[2]);
+    const hit = findMentioned(frag)[0];
+    if(hit && day>=1 && day<=5){ r.ops.push({op:'move', name:hit.s.n, day}); rest = rest.replace(mm[0], ' '); }
+  }
+  /* 调换顺序 / 提前 / 延后 */
+  const swapRe = /(.{2,20}?)\s*(?:和|跟|与)\s*(.{2,20}?)\s*(?:调换|互换|换一下|对调|换个顺序)/;
+  const sw = rest.match(swapRe);
+  if(sw){ const a=findMentioned(sw[1])[0], b=findMentioned(sw[2])[0];
+    if(a&&b){ r.ops.push({op:'swap', a:a.s.n, b:b.s.n}); rest = rest.replace(sw[0],' '); } }
+  if(/(调换顺序|换下顺序|调整顺序|顺序换)/.test(rest) && r.mentioned.length>=2 && !r.ops.some(o=>o.op==='swap')){
+    r.ops.push({op:'swap', a:r.mentioned[0].n, b:r.mentioned[1].n});
+  }
+  const upM = rest.match(/(?:把)?\s*([^，,。；;]{2,20}?)\s*(?:提前|往前|排前面|靠前)/);
+  if(upM){ const hit=findMentioned(upM[1])[0]; if(hit) r.ops.push({op:'up', name:hit.s.n}); }
+  const downM = rest.match(/(?:把)?\s*([^，,。；;]{2,20}?)\s*(?:延后|往后|排后面|靠后|推后)/);
+  if(downM){ const hit=findMentioned(downM[1])[0]; if(hit) r.ops.push({op:'down', name:hit.s.n}); }
+  /* 改天数 */
+  const cd = rest.match(/(?:改成|改为|换成|调整为|变为)\s*([一二三四五1-5])\s*天/);
+  if(cd){ const n = CN_NUM[cd[1]]||parseInt(cd[1]);
+    if(n<1||n>5){ r.type='invalid'; r.reason='days'; return r; }
+    r.days=n; r.ops.push({op:'days', day:n}); rest = rest.replace(cd[0],' '); }
+  /* 增 / 删 */
+  const delRe = /删掉|删除|去掉|移除|不去了|砍掉|剔除|不要了|删了|不安排/;
+  const addRe = /加上|增加|加入|添加|补上|想去|也要去|加个|安排上|加上个/;
+  if(delRe.test(rest)){
+    const segs = rest.split(delRe);
+    segs.slice(1).forEach(seg=> findMentioned(seg).slice(0,2).forEach(h=> r.ops.push({op:'remove', name:h.s.n})));
+    if(r.ops.some(o=>o.op==='remove')) rest = rest.replace(delRe,' ');
+  }
+  if(addRe.test(rest)){
+    const segs = rest.split(addRe);
+    segs.slice(1).forEach(seg=> findMentioned(seg).slice(0,2).forEach(h=> r.ops.push({op:'add', name:h.s.n})));
+    if(r.ops.some(o=>o.op==='add')) rest = rest.replace(addRe,' ');
+  }
+  /* 整句「删减景点 / 修改行程」等操作面板指令 */
+  if(/删减景点|删景点|修改行程|调整行程/.test(rest) && r.ops.length===0) r.ops.push({op:'panel'});
+
+  /* 景点查询 */
+  if(/怎么样|好玩吗|值得去|门票|开放时间|几点开|几点关|要预约|需要预约|怎么预约|在哪|位置|攻略|排队|人多吗|介绍/.test(text) && r.mentioned.length && r.ops.length===0){
+    r.type='query'; r.query=r.mentioned[0]; r.label='景点查询：'+r.query.n; return r;
+  }
+  /* 修改类优先级 */
+  if(r.ops.length){ r.type='modify'; r.label='行程调整：'+r.ops.map(o=>o.op==='move'?`${o.name}→第${o.day}天`:o.op==='remove'?`删除${o.name}`:o.op==='add'?`加入${o.name}`:o.op==='days'?`改为${o.day}天`:o.op==='swap'?'调换顺序':o.op==='panel'?'打开编辑面板':'调整顺序').join('、'); return r; }
+  if(r.regen){ r.type='regen'; r.label='重新生成路线'; return r; }
+
+  /* 无关问题友好拒绝 */
+  const domain = /长沙|旅游|行程|路线|规划|景点|游玩|出门玩|逛|美食|拍照|打卡|预约|门票|主题|安排|推荐|一日|半日|夜市|博物馆|公园|岳麓|橘子洲|星城|几天|出游|旅行|游玩|景区|导览|攻略|游玩天数|行程方案/;
+  if(!domain.test(text) && !r.themes.length && !r.days && !r.prefs.length){
+    if(/^(你好|hi|hello|嗨|在吗|早上好|下午好|晚上好|谢谢|好的|嗯|ok|OK)[\s!！。.,，~]*$/i.test(text)){
+      r.type='vague'; r.label='问候 / 信息不足'; return r;
+    }
+    r.type='reject'; r.label='业务外问题'; return r;
+  }
+  /* 模糊输入：域内但缺核心条件，且当前无行程 */
+  if(!r.days && !r.themes.length && !r.prefs.length && !S.plan){
+    r.type='vague'; r.label='需求信息不足'; return r;
+  }
+  r.label = [r.days?r.days+'天':'沿用'+S.days+'天', r.themes.length?r.themes.map(themeName).join('+'):'沿用主题', r.prefs.length?r.prefs.map(p=>(PREFS.find(x=>x.id===p)||{}).name).join('+'):''].filter(Boolean).join(' / ');
+  return r;
+}
+
+/* ---------- R1–R8 排线算法 ---------- */
+function scoreSpot(s, themes){
+  let v = 0;
+  const tw = Math.max.apply(null, s.t.map(t=>(THEMES.find(x=>x.id===t)||{weight:0}).weight).concat([0]));
+  v += tw*10;
+  v += s.t.filter(t=>themes.includes(t)).length*7;              /* R4 多主题加权 */
+  if(S.prefs.includes('free'))  v += s.g.includes('free')?9:-7;
+  if(S.prefs.includes('metro')) v += s.g.includes('metro')?9:-6;
+  if(S.prefs.includes('night') && (s.s==='night'||s.s==='eve'||s.g.includes('night'))) v+=10;
+  if(S.prefs.includes('photo') && s.g.includes('photo')) v+=9;
+  if(S.prefs.includes('easy')  && s.g.includes('easy'))  v+=8;
+  if(S.audience==='student' && (s.g.includes('student')||s.g.includes('free'))) v+=5;
+  if(S.audience==='family'  && s.g.includes('family'))   v+=7;
+  if(s.need) v+=6;                                             /* R5 预约景点优先 */
+  if(s.a==='far') v-=5;
+  v += ((s.id*37 + S.seed*53) % 5);                             /* 重新生成时的差异化扰动 */
+  return v;
+}
+function buildDays(pool, dayCount, scoreFn){
+  const days = Array.from({length:dayCount},()=>({items:[], hours:0, area:null, locked:false, over:false}));
+  /* 远郊单独成日，从最后一天往前占用，不与市区景点混排（R2） */
+  const far = pool.filter(s=>s.a==='far').sort((a,b)=>scoreFn(b)-scoreFn(a));
+  let di = dayCount-1;
+  far.forEach(s=>{
+    while(di>=0 && days[di].items.length && (days[di].hours+s.h>6 || days[di].area!=='far')) di--;
+    if(di<0) return;
+    days[di].area='far'; days[di].items.push({name:s.n,start:'',end:'',extra:''}); days[di].hours+=s.h;
+  });
+  const cityDays = days.filter(d=>d.area!=='far');
+  const cityPool = pool.filter(s=>s.a!=='far');
+  /* 均衡铺开：按「总时长 / 可用天数」给每天一个软上限，避免 5 天行程被前几天塞满 */
+  const totalH = cityPool.reduce((a,b)=>a+b.h,0);
+  const softCap = Math.max(2.5, Math.min(5.5, totalH/Math.max(1,cityDays.length) + 0.6));
+  /* 同片区聚类（R2） */
+  const groups = {};
+  cityPool.forEach(s=> (groups[s.a] ||= []).push(s));
+  Object.values(groups).forEach(g=>g.sort((a,b)=>scoreFn(b)-scoreFn(a)));
+  const order = Object.keys(groups).sort((x,y)=> (scoreFn(groups[y][0])-scoreFn(groups[x][0])) || (groups[y].length-groups[x].length));
+  const rot = S.seed % Math.max(1, order.length);
+  const areaOrder = order.slice(rot).concat(order.slice(0,rot));
+  const areaOfDay = cityDays.map(()=>null);
+  areaOrder.forEach(ar=>{
+    groups[ar].forEach(s=>{
+      let idx = areaOfDay.findIndex((a,i)=> a===ar && cityDays[i].hours+s.h<=softCap);
+      if(idx<0) idx = cityDays.findIndex(dd=> dd.items.length===0 && dd.hours+s.h<=6);
+      if(idx<0) idx = areaOfDay.findIndex((a,i)=> a===ar && cityDays[i].hours+s.h<=6);
+      if(idx<0) idx = cityDays.findIndex(dd=> dd.hours+s.h<=6);
+      if(idx<0) return;                                        /* R1 放不下则舍弃，不硬凑 */
+      cityDays[idx].items.push({name:s.n,start:'',end:'',extra:''});
+      cityDays[idx].hours += s.h;
+      if(!areaOfDay[idx]) areaOfDay[idx]=ar;
+    });
+  });
+  return days.filter(dd=>dd.items.length);
+}
+const DAY_LIMIT = 6;
+/* R1 再平衡：手动换天 / 固定景点后若某天超 6 小时，把「非用户固定」的景点挪到有余量的天，优先就近片区 */
+function rebalance(plan){
+  const moved = [];
+  const pinnedNames = S.pinned.map(p=>p.name);
+  for(let guard=0; guard<24; guard++){
+    const over = plan.days.find(d=>d.hours>DAY_LIMIT);
+    if(!over) break;
+    const free = over.items.filter(it=>!pinnedNames.includes(it.name));
+    const pick = free.length? free[free.length-1] : over.items[over.items.length-1];
+    if(!pick) break;
+    const s = spot(pick.name); if(!s) break;
+    const targets = plan.days.filter(d=>d!==over && d.hours+s.h<=DAY_LIMIT)
+                            .sort((a,b)=> (a.area===over.area?-1:0)-(b.area===over.area?-1:0) || a.hours-b.hours);
+    if(targets.length){
+      over.items = over.items.filter(x=>x!==pick);
+      targets[0].items.push(pick);
+      over.hours -= s.h; targets[0].hours += s.h;
+      moved.push(pick.name);
+    }else if(plan.days.length < S.days){
+      over.items = over.items.filter(x=>x!==pick);
+      over.hours -= s.h;
+      plan.days.push({items:[pick],hours:s.h,area:s.a,locked:false,over:false});
+      moved.push(pick.name);
+    }else{
+      over.items = over.items.filter(x=>x!==pick);
+      over.hours -= s.h;
+      moved.push(pick.name+'（无处安放已移除）');
+    }
+  }
+  return moved;
+}
+function recalc(plan){
+  /* 先用 items 重算每日时长，保证再平衡基于最新数据 */
+  plan.days.forEach(d=> d.hours = Math.round(d.items.reduce((a,b)=>a+(spot(b.name)?spot(b.name).h:0),0)*10)/10);
+  plan.alerts = plan.alerts.filter(a=>a.tag!=='R1' && a.tag!=='R1b');
+  const moved = rebalance(plan);
+  if(moved.length){
+    plan.alerts.push({tag:'R1b',type:'warn',text:`检测到单日游玩总时长超过 6 小时，行程过满。已自动将「${moved.slice(0,2).join('、')}」调整到有余量的天数，避免赶场；也可用【删减景点】继续精简。`});
+  }
+  plan.days.forEach((day,idx)=>{
+    if(!day.locked){
+      day.items.sort((a,b)=>{
+        const sa=spot(a.name), sb=spot(b.name);
+        return (SLOT_ORDER[sa?sa.s:'pm']??2)-(SLOT_ORDER[sb?sb.s:'pm']??2);
+      });
+    }
+    let cursor = 0;
+    day.items.forEach(it=>{
+      const s = spot(it.name);
+      const start = Math.max(ANCHOR[s?s.s:'pm']??810, cursor);
+      const end = start + (s?s.h:1)*60;
+      it.start = fmt(start); it.end = fmt(end);
+      cursor = end + 15;                                      /* 15 分钟片区通勤缓冲 */
+    });
+    day.hours = Math.round(day.items.reduce((a,b)=>a+(spot(b.name)?spot(b.name).h:0),0)*10)/10;
+    day.over = day.hours > 6;
+    day.no = idx+1;
+    const areas = {};
+    day.items.forEach(it=>{ const s=spot(it.name); if(s) areas[s.a]=(areas[s.a]||0)+1; });
+    day.area = Object.keys(areas).sort((a,b)=>areas[b]-areas[a])[0] || 'old';
+    day.theme = AREA_MAP[day.area]?AREA_MAP[day.area].name:'市区';
+    if(S.holiday){
+      day.items.forEach(it=>{ it.extra = '节假日客流高峰，建议提前 30 分钟到达并预留排队缓冲'; });
+    } else { day.items.forEach(it=> it.extra=''); }
+  });
+  plan.effectiveDays = plan.days.length;
+  plan.totalHours = Math.round(plan.days.reduce((a,d)=>a+d.hours,0)*10)/10;
+  plan.reserveList = [...new Set(plan.days.flatMap(d=>d.items.map(i=>i.name)).filter(n=>spot(n)&&(spot(n).need||spot(n).mon)))];
+  plan.mondayList = [...new Set(plan.days.flatMap(d=>d.items.map(i=>i.name)).filter(n=>spot(n)&&spot(n).mon))];
+  /* 汇总：建议起点与返程说明 */
+  const first = AREA_MAP[plan.days[0]?plan.days[0].area:'old'] || AREA_MAP.old;
+  const last  = AREA_MAP[plan.days[plan.days.length-1]?plan.days[plan.days.length-1].area:'old'] || AREA_MAP.old;
+  plan.startNote = `建议起点 ${first.start}（${first.metro}）；每日同片区景点步行或短途地铁串联，减少跨区通勤`;
+  plan.endNote   = `返程可从 ${last.name} 就近地铁站返回住处；${last.metro}${plan.days.some(d=>d.area==='far')?'；远郊日建议自驾或包车，预留单程 1–1.5 小时':''}`;
+  /* R1 行程过满提示（多由手动加景点触发） */
+  plan.alerts = plan.alerts.filter(a=>a.tag!=='R1');
+  if(plan.days.some(d=>d.over)){
+    plan.alerts.push({tag:'R1',type:'err',text:'检测到单日游玩总时长超过 6 小时，行程过满。建议用【删减景点】或对话「删掉 xx」精简，避免赶场。'});
+  }
+  /* R7 节假日排队缓冲 */
+  plan.alerts = plan.alerts.filter(a=>a.tag!=='R7');
+  if(S.holiday){
+    plan.alerts.push({tag:'R7',type:'warn',text:'已开启节假日模式：夜市、网红店、乐园与预约场馆均增加高峰排队缓冲文字，家庭与研学游客建议早到错峰。'});
+  }
+}
+function generatePlan(){
+  const themes = S.themes.length?S.themes:['food'];
+  const alerts = [];
+  /* 候选池：主题匹配 + 用户手动新增 - 用户删除 */
+  let pool = SPOTS.filter(s=> s.t.some(t=>themes.includes(t)) || S.added.includes(s.n))
+                  .filter(s=> !S.removed.includes(s.n));
+  /* 少走路 / 家庭：剔除长距离徒步与爬山类 */
+  if(S.prefs.includes('easy') || S.audience==='family'){
+    pool = pool.filter(s=> !['岳麓山','桃花岭公园','松雅湖国家湿地公园','梅溪湖公园','城市岛双螺旋观景台'].includes(s.n));
+  }
+  /* 免费优先：若免费景点足够，收费景点降权而非硬排除 */
+  const scoreFn = s=>{
+    let v = scoreSpot(s, themes);
+    if(S.prefs.includes('free') && !s.g.includes('free')) v -= 8;
+    return v;
+  };
+  /* R8 单主题 5 天提示 */
+  if(themes.length===1 && S.days===5){
+    alerts.push({tag:'R8',type:'warn',text:'游玩单一主题5天行程太空，建议选择两个主题搭配游览。（已按当前主题生成，可点快捷面板补选一个主题）'});
+  }
+  /* R6 景点不足判断 */
+  const cityPool = pool.filter(s=>s.a!=='far');
+  const support = Math.min(Math.floor(pool.length/2), Math.ceil(cityPool.reduce((a,b)=>a+b.h,0)/4));
+  if(support < S.days){
+    alerts.push({tag:'R6',type:'warn',text:`当前「${themes.map(themeName).join(' + ')}」可用景点约 ${pool.length} 个，按就近分片与单日 6 小时上限只能支撑约 ${Math.max(1,support)} 天。已按实际可排天数生成，不硬凑无效景点；建议减少天数或增加一个主题搭配。`});
+  }
+  /* R2 远郊不与市区同天 */
+  if(pool.some(s=>s.a==='far') && S.days<3){
+    alerts.push({tag:'R2',type:'info',text:'行程天数较短，远郊点位（'+FAR_LIST.join('、')+'）已自动降权，优先安排市区同片区线路，避免单日长距离通勤。'});
+  }
+  const rawDays = buildDays(pool, S.days, scoreFn);
+  const plan = {
+    themeLabel: themes.map(themeName).join(' + '),
+    requestedDays: S.days, days: rawDays, alerts,
+    createdAt: Date.now(), stamp: ++_planSeq
+  };
+  /* 应用固定到某天的指令 */
+  S.pinned.forEach(p=>{
+    if(p.day>=1 && p.day<=plan.days.length){
+      moveInPlan(plan, p.name, p.day, true);
+    }
+  });
+  recalc(plan);
+  plan.title = `行程方案：${plan.themeLabel}·${plan.effectiveDays}天游`;
+  if(plan.effectiveDays < S.days){
+    const ex = alerts.find(a=>a.tag==='R6');
+    if(ex) ex.text += ` 原计划 ${S.days} 天，实际可排 ${plan.effectiveDays} 天。`;
+  }
+  S.plan = plan;
+  return plan;
+}
+
+/* ---------- 行程微调（多轮上下文） ---------- */
+function allItems(plan){ return plan.days.flatMap(d=>d.items); }
+function removeFromPlan(plan, name){
+  plan.days.forEach(d=> d.items = d.items.filter(i=>i.name!==name));
+  plan.days = plan.days.filter(d=>d.items.length);
+}
+function addToPlan(plan, name, day){
+  const s = spot(name); if(!s) return false;
+  if(allItems(plan).some(i=>i.name===name)) return true;
+  let target = day && day<=plan.days.length ? plan.days[day-1] : null;
+  if(!target) target = plan.days.slice().reverse().find(d=>d.hours + s.h <= 6);
+  if(!target && plan.days.length<5){ target={items:[],hours:0,area:s.a,locked:false,over:false}; plan.days.push(target); }
+  if(!target){ plan.alerts.push({tag:'R1',type:'err',text:'单日游玩总时长已达 6 小时上限，无法再加入「'+name+'」，请先删减其他景点。'}); return false; }
+  target.items.push({name,start:'',end:'',extra:''});
+  target.hours += s.h;
+  return true;
+}
+function moveInPlan(plan, name, day, silent){
+  let found = null;
+  plan.days.forEach(d=>{
+    const i = d.items.findIndex(x=>x.name===name);
+    if(i>=0){ found = d.items.splice(i,1)[0]; }
+  });
+  if(!found){
+    const s = spot(name);
+    if(!s) return;
+    found = {name,start:'',end:'',extra:''};
+  }
+  const idx = Math.min(Math.max(1,day),plan.days.length)-1;
+  plan.days[idx].items.push(found);
+  plan.days = plan.days.filter(d=>d.items.length);
+  if(!silent) plan.days[idx].locked = false;
+}
+function shiftInPlan(plan, name, delta){
+  for(const d of plan.days){
+    const i = d.items.findIndex(x=>x.name===name);
+    if(i>=0){ const j=i+delta; if(j<0||j>=d.items.length) return false;
+      const tmp=d.items[i]; d.items[i]=d.items[j]; d.items[j]=tmp; d.locked=true; return true; }
+  }
+  return false;
+}
+function swapInPlan(plan, a, b){
+  const ia = allItems(plan).findIndex(i=>i.name===a), ib = allItems(plan).findIndex(i=>i.name===b);
+  if(ia<0||ib<0) return false;
+  let oa=null, ob=null;
+  plan.days.forEach(d=> d.items.forEach((it,idx)=>{ if(it.name===a) oa={d,idx}; if(it.name===b) ob={d,idx}; }));
+  if(!oa||!ob) return false;
+  const t = oa.d.items[oa.idx].name; oa.d.items[oa.idx].name = ob.d.items[ob.idx].name; ob.d.items[ob.idx].name = t;
+  oa.d.locked = true; ob.d.locked = true;
+  return true;
+}
+function applyModification(it){
+  let needRegen = false;
+  if(it.holiday) S.holiday = true;
+  if(it.days && it.days!==S.days){ S.days = it.days; needRegen = true; }
+  if(it.themes.length){ S.themes = [...new Set(it.themes)]; needRegen = true; }
+  if(it.prefs.length){ S.prefs = [...new Set(S.prefs.concat(it.prefs))]; needRegen = true; }
+  if(it.audience){ S.audience = it.audience; needRegen = true; }
+  if(!S.plan) needRegen = true;
+  if(needRegen){ generatePlan(); }
+  const plan = S.plan;
+  const done = [];
+  it.ops.forEach(o=>{
+    switch(o.op){
+      case 'remove':
+        if(!S.removed.includes(o.name)) S.removed.push(o.name);
+        S.added = S.added.filter(x=>x!==o.name);
+        S.pinned = S.pinned.filter(p=>p.name!==o.name);
+        removeFromPlan(plan, o.name);
+        done.push('已删掉「'+o.name+'」');
+        break;
+      case 'add':
+        S.removed = S.removed.filter(x=>x!==o.name);
+        if(!S.added.includes(o.name)) S.added.push(o.name);
+        if(addToPlan(plan, o.name)) done.push('已加入「'+o.name+'」');
+        break;
+      case 'move':
+        S.removed = S.removed.filter(x=>x!==o.name);
+        S.pinned = S.pinned.filter(p=>p.name!==o.name);
+        S.pinned.push({name:o.name, day:Math.min(o.day, Math.max(1,plan.days.length))});
+        moveInPlan(plan, o.name, o.day);
+        done.push('已把「'+o.name+'」移到第 '+o.day+' 天');
+        break;
+      case 'up': case 'down':
+        if(shiftInPlan(plan, o.name, o.op==='up'?-1:1)) done.push('已调整「'+o.name+'」的先后顺序');
+        break;
+      case 'swap':
+        if(swapInPlan(plan, o.a, o.b)) done.push('已调换「'+o.a+'」与「'+o.b+'」的顺序');
+        break;
+      case 'days': done.push('游玩天数已改为 '+o.day+' 天'); break;
+      case 'panel': S.editMode='modify'; done.push('已打开右侧编辑模式'); break;
+    }
+  });
+  recalc(plan);
+  plan.title = `行程方案：${plan.themeLabel}·${plan.effectiveDays}天游`;
+  return done;
+}
+function regenerate(){
+  S.seed = (S.seed+1)%7;
+  generatePlan();
+  return '已为你重新规划一版路线（调整了片区组合与景点排序）。仍不满意可以继续点【不满意，重新生成】，或直接告诉我「删掉 xx」「把 xx 放到第 3 天」。';
+}
+
+/* ---------- 界面渲染 ---------- */
+function renderStatic(){
+  document.getElementById('themeGrid').innerHTML = THEMES.map((t,i)=>
+    `<button class="theme-btn ${S.themes.includes(t.id)?'on':''}" data-theme="${t.id}" title="${t.name}">
+       <span class="theme-ico" style="background:${t.color}">${t.ico}</span>
+       <span class="theme-txt"><b>${t.name}</b><i>${t.votes} 票 · 热度第 ${i+1}</i></span>
+       <span class="theme-rank">TOP${i+1}</span></button>`).join('');
+  document.getElementById('daySeg').innerHTML = [1,2,3,4,5].map(n=>
+    `<button class="${S.days===n?'on':''}" data-day="${n}">${n} 天</button>`).join('');
+  document.getElementById('prefChips').innerHTML = PREFS.map(p=>
+    `<button class="chip ${S.prefs.includes(p.id)?'on':''}" data-pref="${p.id}">${p.name}</button>`).join('');
+  document.getElementById('audSeg').innerHTML = AUDIENCES.map(a=>
+    `<button class="${S.audience===a.id?'on':''}" data-aud="${a.id}">${a.name}</button>`).join('');
+  document.getElementById('guideList').innerHTML = GUIDES.map((g,i)=>
+    `<button class="guide-item" data-ask="${esc(g)}"><span>0${i+1}</span>${esc(g)}</button>`).join('');
+  document.getElementById('chatQuick').innerHTML = QUICK_ASKS.map(q=>
+    `<button class="qask" data-ask="${esc(q)}">${esc(q)}</button>`).join('');
+  document.getElementById('holidayToggle').checked = !!S.holiday;
+}
+function renderHistory(){
+  const list = document.getElementById('histList');
+  document.getElementById('histMeta').textContent = `共 ${S.history.length} 轮对话 · 上下文已记忆（主题 / 天数 / 偏好无需重复输入）`;
+  if(!S.history.length){ list.innerHTML = '<div class="hist-empty">还没有对话，试试上面的引导问题吧</div>'; return; }
+  list.innerHTML = S.history.map((h,i)=>
+    `<div class="hist-item" data-ask="${esc(h.q)}" title="点击回填到输入框">
+       <span class="hist-no">${i+1}</span>
+       <span><b>${esc(h.q)}</b><i>${esc(h.intent)}</i></span></div>`).join('');
+  list.scrollTop = list.scrollHeight;
+}
+function addMsg(role, html, opts){
+  opts = opts || {};
+  const body = document.getElementById('chatBody');
+  const div = document.createElement('div');
+  div.className = 'msg '+role;
+  let inner = `<div class="msg-av">${role==='ai'?'AI':'我'}</div><div class="bubble">${html}`;
+  if(opts.tags && opts.tags.length){
+    inner += `<div class="intent-row">`+opts.tags.map(t=>`<span class="itag ${t.cls||''}">${esc(t.text)}</span>`).join('')+`</div>`;
+  }
+  if(opts.actions && opts.actions.length){
+    inner += `<div class="msg-actions">`+opts.actions.map(a=>
+      `<button class="msg-act ${a.cls||''}" data-act="${a.act}" ${a.text?`data-ask="${esc(a.text)}"`:''} ${a.name?`data-name="${esc(a.name)}"`:''}>${esc(a.label)}</button>`
+    ).join('')+`</div>`;
+  }
+  inner += `</div>`;
+  div.innerHTML = inner;
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+  return div;
+}
+function spotBadges(s){
+  const b = [];
+  if(s.need) b.push('<span class="sb reserve">需预约</span>');
+  if(s.mon)  b.push('<span class="sb mon">周一闭馆</span>');
+  if(s.g.includes('free')) b.push('<span class="sb free">免费</span>');
+  if(s.a==='far') b.push('<span class="sb far">远郊</span>');
+  else if(s.s==='night'||s.s==='eve') b.push('<span class="sb night">夜景 / 夜间</span>');
+  return b.slice(0,3).join('');
+}
+let _planSeq = 0, _lastPlanStamp = -1;
+function renderPlan(){
+  const box = document.getElementById('planBody'), badge = document.getElementById('planBadge');
+  const p = S.plan;
+  const prevScroll = box.scrollTop;
+  if(!p){
+    badge.textContent='待生成';
+    box.innerHTML = `<div class="plan-empty">
+      <svg width="96" height="76" viewBox="0 0 96 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="70" cy="20" r="11" fill="#FBE0C8"/>
+        <path d="M6 60L30 34L46 50L60 38L90 60V70H6V60Z" fill="#F3D7C2"/>
+        <path d="M6 66C20 58 30 62 42 66C56 71 68 60 90 64" stroke="#E8572A" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M22 44h10M27 39v10" stroke="#E8572A" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <h3>还没有行程方案</h3>
+      <p>在对话窗口描述需求，或点左侧「一键生成行程」。<br>支持 1–5 天、6 大主题自由混合，我会按景点分布与时段自动排线。</p>
+    </div>`;
+    return;
+  }
+  badge.textContent = `${p.effectiveDays} 天 · ${p.days.reduce((a,d)=>a+d.items.length,0)} 个景点`;
+  const mode = S.editMode;
+  let html = `<div class="plan-title"><h3>${esc(p.title)}</h3>
+      <p>按天分组 · 每日游玩总时长上限 6 小时 · 同片区就近串联</p>
+      <div class="pt-meta">
+        <span class="pt-pill">${esc(themeLabel())}</span>
+        <span class="pt-pill">${esc(audName())}</span>
+        <span class="pt-pill">${esc(prefNames())}</span>
+        <span class="pt-pill">累计 ${p.totalHours} 小时</span>
+        ${S.holiday?'<span class="pt-pill">节假日模式</span>':''}
+      </div></div>`;
+  p.alerts.forEach(a=>{ html += `<div class="plan-alert ${a.type}">${esc(a.text)}</div>`; });
+  html += `<div class="edit-banner ${mode?'show':''}">
+      ${mode==='modify'
+        ? '<b>修改行程模式</b>：用每个景点下方的按钮上移 / 下移 / 换天 / 删除；也可以直接在对话里说「把橘子洲放到第三天」「删掉铜官窑古镇」。'
+        : '<b>删减景点模式</b>：点击景点卡片选中（可多选），再点下方【确认删减】；系统会自动重算每日时长与时段。'}
+      <div class="edit-confirm">
+        ${mode==='remove'?'<button data-op="confirmRemove">确认删减</button>':''}
+        <button class="ghost" data-op="exitEdit">完成 / 退出编辑</button>
+      </div></div>`;
+  p.days.forEach((d,i)=>{
+    const ar = AREA_MAP[d.area]||AREA_MAP.old;
+    html += `<div class="day-block">
+      <div class="day-hd">
+        <div class="dl"><span class="day-no">DAY ${i+1}</span><span class="day-theme">${esc(d.theme||ar.name)} · ${ar.metro}</span></div>
+        <span class="day-hours ${d.over?'over':''}">当日 ${d.hours} h${d.over?' · 已超 6h':''}</span>
+      </div>`;
+    d.items.forEach((it,j)=>{
+      const s = spot(it.name); if(!s) return;
+      const picked = S.removeSel.includes(it.name);
+      const tips = [s.av, s.q?'高峰排队：'+s.q:'', it.extra, s.need?'预约：'+s.rs:''].filter(Boolean).join('；');
+      html += `<div class="spot-card ${picked?'picked':''}" data-name="${esc(it.name)}">
+        <div class="time-col"><b>${it.start}</b><i>至 ${it.end}</i><span class="seq">${j+1}</span></div>
+        <div class="spot-main">
+          <span class="spot-name" data-open="${esc(it.name)}">${esc(it.name)}</span>
+          <span class="spot-badges">${spotBadges(s)}</span>
+          <div class="spot-intro">${esc(s.d)}</div>
+          <div class="spot-meta">
+            <span><b>游玩时长</b> ${s.h} 小时</span>
+            <span><b>位置</b> ${esc(s.loc)}</span>
+            <span><b>门票</b> ${esc(s.tk)}</span>
+          </div>
+          <div class="spot-tips"><b>小贴士：</b>${esc(tips)}</div>
+          ${mode==='modify'?`<div class="spot-edit">
+            <button data-edit="up" data-name="${esc(it.name)}">↑ 上移</button>
+            <button data-edit="down" data-name="${esc(it.name)}">↓ 下移</button>
+            <button data-edit="move" data-name="${esc(it.name)}">→ 换一天</button>
+            <button class="del" data-edit="del" data-name="${esc(it.name)}">× 删除</button>
+          </div>`:''}
+          ${mode==='remove'?`<div class="spot-edit"><button data-pick="${esc(it.name)}">${picked?'✓ 已选中，点击取消':'选择删减'}</button></div>`:''}
+        </div></div>`;
+    });
+    html += `</div>`;
+  });
+  const res = p.reserveList.length? p.reserveList.map(n=>`<span class="res-pill">${esc(n)}</span>`).join('') : '<span>本路线无需预约的景点</span>';
+  const mon = p.mondayList.length? p.mondayList.map(n=>`<span class="res-pill">${esc(n)}</span>`).join('') : '<span>无</span>';
+  html += `<div class="summary">
+      <h4>汇总信息区</h4>
+      <div class="sum-row"><b>总天数</b><span>原计划 ${p.requestedDays} 天 / 实际可排 ${p.effectiveDays} 天，共 ${p.days.reduce((a,d)=>a+d.items.length,0)} 个景点，累计游玩 ${p.totalHours} 小时（单日上限 6 小时）</span></div>
+      <div class="sum-row"><b>预约景点提醒</b><span class="res-list">${res}<br><span style="color:#8A621C">湖南博物院需提前 5 天公众号预约并携带身份证；橘子洲旺季预约紧张，建议出行首日先抢票。</span></span></div>
+      <div class="sum-row"><b>周一闭馆提醒</b><span class="res-list">${mon}<br><span style="color:#8A621C">${esc(CLOSED_MONDAY.join('、'))} 周一闭馆，若行程含周一请顺延调整。</span></span></div>
+      <div class="sum-row"><b>建议起点</b><span>${esc(p.startNote)}</span></div>
+      <div class="sum-row"><b>返程说明</b><span>${esc(p.endNote)}</span></div>
+      <div class="sum-row"><b>人群 / 偏好</b><span>${esc(audName())} · ${esc(prefNames())}；夜市与夜景点位已自动排在傍晚夜间${S.holiday?'；节假日已增加排队缓冲':''}</span></div>
+    </div>
+    <div class="plan-ops">
+      <button class="op-btn primary" data-op="regen">重新规划</button>
+      <button class="op-btn ${mode==='modify'?'active':''}" data-op="modify">修改行程</button>
+      <button class="op-btn ${mode==='remove'?'active':''}" data-op="remove">删减景点</button>
+    </div>`;
+  box.innerHTML = html;
+  box.scrollTop = (p.stamp||0) === _lastPlanStamp ? Math.min(prevScroll, Math.max(0, box.scrollHeight-box.clientHeight)) : 0;
+  _lastPlanStamp = p.stamp||0;
+}
+function openModal(name){
+  const s = spot(name); if(!s) return;
+  const tags = [s.t.map(themeName).join(' / '), s.a==='far'?'远郊点位':(AREA_MAP[s.a]||{}).name, s.mon?'周一闭馆':'', s.need?'需预约':'', s.g.includes('free')?'免费':'收费'].filter(Boolean);
+  let note = '';
+  if(s.mon) note += '该场馆周一闭馆，请勿安排在周一；';
+  if(s.need) note += '该点位需要预约，建议行程确定后第一时间预约；';
+  if(s.a==='far') note += '远郊点位，建议单独安排一日游，不与市区景点混排；';
+  if(s.s==='night') note += '夜市 / 夜宵类点位，已自动安排在夜间时段；';
+  if(s.s==='eve') note += '傍晚至夜间体验最佳，已自动安排在傍晚时段；';
+  const html = `<div class="modal-hd"><div><h3>${esc(s.n)}</h3><p>${esc(s.d)}</p></div><button class="modal-close" data-close>×</button></div>
+    <div class="modal-bd">
+      <div class="modal-tags">${tags.map(t=>`<span class="mtag">${esc(t)}</span>`).join('')}</div>
+      <div class="mrow"><b>门票</b><span>${esc(s.tk)}</span></div>
+      <div class="mrow"><b>开放提示</b><span>${esc(s.op)}</span></div>
+      <div class="mrow"><b>位置</b><span>${esc(s.loc)}</span></div>
+      <div class="mrow"><b>预约要求</b><span>${esc(s.rs)}</span></div>
+      <div class="mrow"><b>避坑提示</b><span>${esc(s.av)}</span></div>
+      <div class="mrow"><b>高峰排队</b><span>${esc(s.q)}</span></div>
+      <div class="mrow"><b>建议时长</b><span>${s.h} 小时</span></div>
+      <div class="mrow"><b>所属主题</b><span>${s.t.map(themeName).join(' / ')}</span></div>
+      ${note?`<div class="modal-note"><b>排线提醒：</b>${esc(note)}</div>`:''}
+      <div class="modal-src">${s.src?esc('数据来源：'+s.src+'。门票、开放时间、预约规则可能调整，出行前请以官方当日公告为准。'):`数据来源：景点公开信息整理（编号 ${s.id}）。门票、开放时间、预约规则可能调整，出行前请以官方当日公告为准。`}</div>
+    </div>`;
+  document.getElementById('modalBox').innerHTML = html;
+  document.getElementById('modalMask').classList.add('show');
+}
+function closeModal(){ document.getElementById('modalMask').classList.remove('show'); }
+
+/* ---------- AI 回复 ---------- */
+function applyConfig(it){
+  if(it.holiday) S.holiday = true;
+  if(it.days) S.days = it.days;
+  if(it.themes && it.themes.length) S.themes = [...new Set(it.themes)];
+  if(it.prefs && it.prefs.length) S.prefs = [...new Set(it.prefs)];
+  if(it.audience) S.audience = it.audience;
+  renderStatic();
+}
+function replyPlan(plan, it, extra){
+  const tags = [
+    {text:'意图：'+(it.type==='modify'?'行程动态调整':it.type==='regen'?'重新生成':'生成行程')},
+    {text:'天数：'+S.days+' 天',cls:'t2'},
+    {text:'主题：'+themeLabel(),cls:'t2'},
+    {text:'偏好：'+prefNames(),cls:'t2'},
+    {text:'人群：'+audName(),cls:'t2'}
+  ];
+  if(S.holiday) tags.push({text:'节假日排队缓冲已开启',cls:'t2'});
+  let html = '';
+  if(extra) html += esc(extra)+'<br>';
+  html += `<b>已为你排好路线：</b><span class="hl">${esc(plan.title)}</span><br>`;
+  html += `共 ${plan.effectiveDays} 天、${plan.days.reduce((a,d)=>a+d.items.length,0)} 个景点、累计 ${plan.totalHours} 小时；夜市与夜景点位已放在傍晚 / 夜间，需预约景点已醒目标记。<br>`;
+  if(plan.alerts.length){
+    html += `<span class="hl">规则提醒</span><br>` + plan.alerts.map(a=>'· '+esc(a.text)).join('<br>');
+  }
+  addMsg('ai', html, {tags, actions:[
+    {act:'view', label:'查看完整行程'},
+    {act:'regen', label:'不满意，重新生成', cls:'warn'},
+    {act:'ok', label:'满意，就按这个走'}
+  ]});
+  renderPlan(); renderHistory(); save();
+}
+function handleUser(raw){
+  const text = (raw||'').trim(); if(!text) return;
+  addMsg('user', esc(text));
+  document.getElementById('userInput').value = '';
+  const it = parseIntent(text);
+  S.history.push({q:text, intent:it.label, ts:Date.now()});
+  renderHistory();
+  const guideActions = [
+    {act:'ask', text:'帮我规划5天湖湘人文+美食路线，地铁优先', label:'试试：5 天混合路线'},
+    {act:'ask', text:'家庭出行，4天行程，少爬山', label:'试试：家庭 4 天'},
+    {act:'ask', text:'3天网红拍照游，免费优先，适合拍照', label:'试试：3 天拍照'}
+  ];
+  if(it.type==='invalid'){
+    const msg='游玩天数仅支持1‑5天，请重新输入需求';
+    toast(msg,'err');
+    addMsg('ai', `<b>输入校验未通过</b><br>${msg}。<br>我目前只支持 <span class="hl">1–5 天</span>的长沙行程，例如「帮我规划 3 天湖湘人文+美食路线」。`,
+      {tags:[{text:'拦截：非法游玩天数'}],actions:guideActions});
+    save(); return;
+  }
+  if(it.type==='reject'){
+    addMsg('ai', `我是专注长沙主题游的智能体，关于「${esc(text.slice(0,30))}」这类问题暂时帮不上忙～<br>告诉我 <b>玩几天（1–5 天）</b>、<b>喜欢哪个主题</b>、<b>有什么偏好（免费 / 地铁 / 少走路 / 夜景拍照）</b>，我马上帮你排一条不绕路的路线。`,
+      {tags:[{text:'兜底：业务外问题，友好拒绝'}],actions:guideActions});
+    save(); return;
+  }
+  if(it.type==='vague'){
+    addMsg('ai', `需求还差一点点信息～ 我已经记住当前条件：<b>${S.days} 天 / ${esc(themeLabel())} / ${esc(prefNames())}</b>。<br>请补充 <span class="hl">游玩天数（1–5 天）</span>与 <span class="hl">感兴趣的主题</span>，或直接点左侧主题标签后按「一键生成行程」。`,
+      {tags:[{text:'兜底：需求模糊，引导补充'},{text:'上下文已保留',cls:'t2'}],actions:guideActions});
+    save(); return;
+  }
+  if(it.type==='query'){
+    const s = it.query;
+    addMsg('ai', `查到「<span class="hl">${esc(s.n)}</span>」的资料：<br>· 门票：${esc(s.tk)}<br>· 开放：${esc(s.op)}<br>· 预约：${esc(s.rs)}<br>· 位置：${esc(s.loc)}<br>· 避坑：${esc(s.av)}<br>${s.h?`建议游玩 ${s.h} 小时。`:''}`,
+      {tags:[{text:'意图：景点查询'},{text:s.n,cls:'t2'}],actions:[
+        {act:'detail', name:s.n, label:'查看完整景点详情'},
+        {act:'ask', text:'把'+s.n+'加入行程', label:'加入当前行程'},
+        {act:'regen', label:'重新生成路线', cls:'warn'}
+      ]});
+    save(); return;
+  }
+  if(it.type==='regen'){
+    if(!S.plan){ generatePlan(); }
+    const msg = regenerate();
+    replyPlan(S.plan, it, msg);
+    toast('已重新生成一版路线','ok');
+    return;
+  }
+  if(it.type==='modify'){
+    if(it.holiday){ S.holiday=true; renderStatic(); }
+    if([...it.ops].some(o=>o.op==='panel')){ S.editMode='modify'; }
+    const done = applyModification(it);
+    renderStatic();
+    replyPlan(S.plan, it, `已完成调整：${done.length?done.join('；'):'已按新条件更新行程'}。其余条件已自动沿用，无需重复输入。`);
+    return;
+  }
+  /* 生成 / 更新 */
+  applyConfig(it);
+  const plan = generatePlan();
+  replyPlan(plan, it, '');
+  toast('行程已生成','ok');
+}
+function doRegenFromPanel(){
+  if(!S.plan){ toast('还没有行程，先生成一版吧','err'); return; }
+  S.seed = (S.seed+1)%7;
+  generatePlan();
+  S.editMode = null; S.removeSel = [];
+  replyPlan(S.plan, {type:'regen'}, '已按当前条件重新规划一版路线（片区组合与景点排序有变化）。');
+  toast('已重新规划','ok');
+}
+
+/* ---------- 行程面板微调 ---------- */
+function panelEdit(act, name){
+  const p = S.plan; if(!p) return;
+  if(act==='up'||act==='down'){
+    if(shiftInPlan(p, name, act==='up'?-1:1)) toast('已调整顺序','ok');
+    else toast('已经在该天的首位 / 末位了','err');
+  } else if(act==='move'){
+    let di = p.days.findIndex(d=>d.items.some(i=>i.name===name));
+    const next = di+1 >= p.days.length ? 1 : di+2;
+    S.pinned = S.pinned.filter(x=>x.name!==name); S.pinned.push({name,day:next});
+    moveInPlan(p, name, next);
+    toast(`已移到第 ${next} 天`,'ok');
+  } else if(act==='del'){
+    if(!S.removed.includes(name)) S.removed.push(name);
+    S.added = S.added.filter(x=>x!==name);
+    S.pinned = S.pinned.filter(x=>x.name!==name);
+    removeFromPlan(p, name);
+    toast('已删除「'+name+'」','ok');
+  }
+  recalc(p);
+  p.title = `行程方案：${p.themeLabel}·${p.effectiveDays}天游`;
+  S.history.push({q:'面板微调：'+({up:'上移',down:'下移',move:'换天',del:'删除'}[act])+'「'+name+'」', intent:'面板编辑 · 上下文已同步', ts:Date.now()});
+  renderPlan(); renderHistory(); save();
+}
+
+/* ---------- 事件绑定 ---------- */
+function bind(){
+  document.getElementById('themeGrid').addEventListener('click', e=>{
+    const b=e.target.closest('[data-theme]'); if(!b) return;
+    const id=b.dataset.theme;
+    if(S.themes.includes(id)){ if(S.themes.length>1) S.themes=S.themes.filter(x=>x!==id); }
+    else S.themes.push(id);
+    renderStatic(); save();
+  });
+  document.getElementById('daySeg').addEventListener('click', e=>{
+    const b=e.target.closest('[data-day]'); if(!b) return;
+    S.days=parseInt(b.dataset.day); renderStatic(); save();
+  });
+  document.getElementById('prefChips').addEventListener('click', e=>{
+    const b=e.target.closest('[data-pref]'); if(!b) return;
+    const id=b.dataset.pref;
+    S.prefs = S.prefs.includes(id)? S.prefs.filter(x=>x!==id) : S.prefs.concat([id]);
+    renderStatic(); save();
+  });
+  document.getElementById('audSeg').addEventListener('click', e=>{
+    const b=e.target.closest('[data-aud]'); if(!b) return;
+    S.audience=b.dataset.aud; renderStatic(); save();
+  });
+  document.getElementById('quickGen').addEventListener('click', ()=>{
+    const summary = `一键生成：${S.days} 天 · ${themeLabel()} · ${prefNames()} · ${audName()}`;
+    addMsg('user', esc(summary));
+    S.history.push({q:summary, intent:'快捷指令面板生成', ts:Date.now()});
+    renderHistory();
+    applyConfig({days:S.days, themes:[], prefs:[], holiday:S.holiday});
+    const plan = generatePlan();
+    S.editMode=null; S.removeSel=[];
+    replyPlan(plan, {type:'generate'}, '已读取快捷面板条件（主题 / 天数 / 偏好 / 人群）。');
+    toast('行程已生成','ok');
+  });
+  document.getElementById('guideList').addEventListener('click', e=>{
+    const b=e.target.closest('[data-ask]'); if(!b) return;
+    handleUser(b.dataset.ask);
+  });
+  document.getElementById('chatQuick').addEventListener('click', e=>{
+    const b=e.target.closest('[data-ask]'); if(!b) return;
+    handleUser(b.dataset.ask);
+  });
+  document.getElementById('histList').addEventListener('click', e=>{
+    const b=e.target.closest('[data-ask]'); if(!b) return;
+    const inp=document.getElementById('userInput'); inp.value=b.dataset.ask; inp.focus();
+  });
+  document.getElementById('clearHistory').addEventListener('click', ()=>{
+    S.history=[]; renderHistory(); save(); toast('对话历史已清空','ok');
+  });
+  document.getElementById('sendBtn').addEventListener('click', ()=> handleUser(document.getElementById('userInput').value));
+  document.getElementById('userInput').addEventListener('keydown', e=>{
+    if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); handleUser(e.target.value); }
+  });
+  document.getElementById('btnRegen').addEventListener('click', doRegenFromPanel);
+  document.getElementById('chatBody').addEventListener('click', e=>{
+    const b=e.target.closest('[data-act]'); if(!b) return;
+    const act=b.dataset.act;
+    if(act==='ask' && b.dataset.ask) handleUser(b.dataset.ask);
+    else if(act==='regen') doRegenFromPanel();
+    else if(act==='ok') toast('已记录，祝你长沙玩得开心！','ok');
+    else if(act==='view'){ document.querySelector('.plan-body').scrollTop=0; document.querySelector('.plan-panel').style.boxShadow='0 0 0 2px #F5834A'; setTimeout(()=>document.querySelector('.plan-panel').style.boxShadow='',900); }
+    else if(act==='detail') openModal(b.dataset.name);
+  });
+  document.getElementById('planBody').addEventListener('click', e=>{
+    const opBtn=e.target.closest('[data-op]');
+    if(opBtn){
+      const op=opBtn.dataset.op;
+      if(op==='regen') doRegenFromPanel();
+      else if(op==='modify'){ S.editMode = S.editMode==='modify'?null:'modify'; S.removeSel=[]; renderPlan(); }
+      else if(op==='remove'){ S.editMode = S.editMode==='remove'?null:'remove'; S.removeSel=[]; renderPlan(); }
+      else if(op==='exitEdit'){ S.editMode=null; S.removeSel=[]; renderPlan(); }
+      else if(op==='confirmRemove'){
+        if(!S.removeSel.length){ toast('请先点击卡片选择要删减的景点','err'); return; }
+        S.removeSel.forEach(n=>{ if(!S.removed.includes(n)) S.removed.push(n); S.pinned=S.pinned.filter(x=>x.name!==n); });
+        S.removeSel.forEach(n=> removeFromPlan(S.plan,n));
+        const cnt=S.removeSel.length;
+        S.editMode=null; S.removeSel=[];
+        recalc(S.plan);
+        S.plan.title=`行程方案：${S.plan.themeLabel}·${S.plan.effectiveDays}天游`;
+        S.history.push({q:`面板删减 ${cnt} 个景点`, intent:'删减景点 · 每日时长已重算', ts:Date.now()});
+        renderPlan(); renderHistory(); save(); toast(`已删减 ${cnt} 个景点`,'ok');
+      }
+      return;
+    }
+    const editBtn=e.target.closest('[data-edit]');
+    if(editBtn){ panelEdit(editBtn.dataset.edit, editBtn.dataset.name); return; }
+    const pickBtn=e.target.closest('[data-pick]');
+    if(pickBtn){
+      const n=pickBtn.dataset.pick;
+      S.removeSel = S.removeSel.includes(n)? S.removeSel.filter(x=>x!==n) : S.removeSel.concat([n]);
+      renderPlan(); return;
+    }
+    if(S.editMode==='remove'){
+      const card=e.target.closest('.spot-card');
+      if(card){ const n=card.dataset.name;
+        S.removeSel = S.removeSel.includes(n)? S.removeSel.filter(x=>x!==n) : S.removeSel.concat([n]);
+        renderPlan(); return; }
+    }
+    const open=e.target.closest('[data-open]');
+    if(open) openModal(open.dataset.open);
+  });
+  document.getElementById('holidayToggle').addEventListener('change', e=>{
+    S.holiday=e.target.checked;
+    if(S.plan){ recalc(S.plan); renderPlan(); }
+    toast(S.holiday?'已开启节假日模式：自动增加排队缓冲':'已关闭节假日模式','ok');
+    save();
+  });
+  document.getElementById('noticeToggle').addEventListener('click', e=>{
+    const bar=document.getElementById('noticeBar');
+    bar.classList.toggle('collapsed');
+    e.target.textContent = bar.classList.contains('collapsed')?'展开':'收起';
+  });
+  document.getElementById('modalMask').addEventListener('click', e=>{
+    if(e.target.id==='modalMask' || e.target.closest('[data-close]')) closeModal();
+  });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+}
+
+/* ---------- 初始化 ---------- */
+(function init(){
+  const restored = load();
+  ['statSpots','statSpotsTxt','statSpotsFoot'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.textContent=SPOTS.length;
+  });
+  bind();
+  renderStatic(); renderHistory(); renderPlan();
+  if(restored && (S.history.length || S.plan)){
+    addMsg('ai', `已恢复上次的会话上下文与行程方案（${S.days} 天 · ${esc(themeLabel())}）。<br>可以继续说「把橘子洲放到第三天」「删掉铜官窑古镇」，条件无需重复输入。`,
+      {tags:[{text:'上下文记忆已恢复'},{text:'对话 '+S.history.length+' 轮',cls:'t2'}],
+       actions:[{act:'view',label:'查看已恢复的行程'},{act:'regen',label:'不满意，重新生成',cls:'warn'}]});
+  }else{
+    addMsg('ai', `你好，我是 <span class="hl">星城漫游</span>。<br>收录 <b>6 大主题 / ${SPOTS.length} 个景点</b>，支持 <b>1–5 天</b>行程规划，能听懂自然语言、记住上下文、随时增删调序。<br><br>可以这样问我：<br>· 帮我规划5天湖湘人文+美食路线，地铁优先<br>· 家庭出行，4天行程，少爬山<br>· 把橘子洲放到第三天，删掉铜官窑古镇<br><br>也可以点左侧主题 + 偏好标签，一键生成。`,
+      {tags:[{text:'支持 1–5 天'},{text:'6 大主题混合',cls:'t2'},{text:'多轮上下文记忆',cls:'t2'},{text:'智能排线',cls:'t2'}],
+       actions:[
+        {act:'ask', text:'帮我规划5天湖湘人文+美食路线，地铁优先', label:'试试 5 天混合路线'},
+        {act:'ask', text:'家庭出行，4天行程，少爬山', label:'试试家庭 4 天'},
+        {act:'ask', text:'3天网红拍照游，免费优先，适合拍照', label:'试试 3 天拍照'}
+       ]});
+  }
+})();
+</script>
+</body>
+</html>
